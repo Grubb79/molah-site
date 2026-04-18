@@ -1,0 +1,4817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+ <title>Learn Molah - A Minimal Lingua Franca</title>
+ <style>
+ * {
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+ }
+
+ body {
+ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+ line-height: 1.7;
+ color: #2C2C2A;
+ background: #FAFAF8;
+ }
+
+ .header {
+ background: #534AB7;
+ background-image:
+ radial-gradient(ellipse at 20% 50%, rgba(120,110,220,0.45) 0%, transparent 60%),
+ radial-gradient(ellipse at 80% 30%, rgba(40,30,130,0.5) 0%, transparent 55%);
+ color: white;
+ padding: 4rem 1.5rem 3.5rem;
+ text-align: center;
+ position: relative;
+ overflow: hidden;
+ }
+
+ .header::before {
+ content: '';
+ position: absolute;
+ inset: 0;
+ background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+ pointer-events: none;
+ }
+
+ .header h1 {
+ font-family: 'Cinzel', Georgia, serif;
+ font-size: 5rem;
+ font-weight: 900;
+ letter-spacing: 0.25em;
+ margin-bottom: 0.1em;
+ line-height: 1;
+ text-shadow: 0 2px 20px rgba(0,0,0,0.25);
+ position: relative;
+ }
+
+ .header-rule {
+ width: 80px;
+ height: 2px;
+ background: rgba(255,255,255,0.45);
+ margin: 0.85rem auto 0.9rem;
+ position: relative;
+ }
+
+ .header-rule::before,
+ .header-rule::after {
+ content: '◆';
+ position: absolute;
+ top: 50%;
+ transform: translateY(-50%);
+ font-size: 0.5rem;
+ color: rgba(255,255,255,0.55);
+ line-height: 1;
+ }
+ .header-rule::before { right: calc(100% + 8px); }
+ .header-rule::after { left: calc(100% + 8px); }
+
+ .header p {
+ font-family: 'Raleway', sans-serif;
+ font-size: 0.9375rem;
+ font-weight: 300;
+ letter-spacing: 0.18em;
+ text-transform: uppercase;
+ opacity: 0.88;
+ position: relative;
+ }
+
+ .container {
+ max-width: 900px;
+ margin: 0 auto;
+ padding: 2rem 1.5rem;
+ }
+
+ .intro {
+ background: white;
+ border-radius: 12px;
+ padding: 2rem;
+ margin-bottom: 2rem;
+ box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+ }
+
+ .intro h2 {
+ font-size: 1.5rem;
+ font-weight: 500;
+ margin-bottom: 1rem;
+ color: #3C3489;
+ }
+
+ .benefits {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+ gap: 1rem;
+ margin: 2rem 0;
+ }
+
+ .benefit-card {
+ background: #E1F5EE;
+ border-radius: 8px;
+ padding: 1.5rem;
+ border: 2px solid #0F6E56;
+ }
+
+ .benefit-card h3 {
+ font-size: 1.125rem;
+ font-weight: 500;
+ color: #085041;
+ margin-bottom: 0.5rem;
+ }
+
+ .benefit-card p {
+ font-size: 0.9375rem;
+ color: #085041;
+ }
+
+ .lesson {
+ background: white;
+ border-radius: 12px;
+ padding: 2rem;
+ margin-bottom: 2rem;
+ box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+ }
+
+ .lesson h2 {
+ font-size: 1.75rem;
+ font-weight: 500;
+ margin-bottom: 1.5rem;
+ color: #3C3489;
+ border-bottom: 2px solid #CECBF6;
+ padding-bottom: 0.75rem;
+ }
+
+ .lesson h3 {
+ font-size: 1.25rem;
+ font-weight: 500;
+ margin: 1.5rem 0 0.75rem;
+ color: #712B13;
+ }
+
+ .alphabet-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+ gap: 0.75rem;
+ margin: 1rem 0;
+ }
+
+ /* ── Speakable elements ── */
+ .speakable {
+ cursor: pointer;
+ user-select: none;
+ }
+
+ .letter-card.speakable {
+ transition: background 0.15s, transform 0.12s, box-shadow 0.15s;
+ position: relative;
+ }
+
+ .letter-card.speakable:hover {
+ background: #EEEDFE;
+ border-color: #534AB7;
+ transform: translateY(-2px);
+ box-shadow: 0 4px 12px rgba(83,74,183,0.18);
+ }
+
+ .letter-card.speakable:active {
+ transform: scale(0.93);
+ background: #CECBF6;
+ }
+
+ .letter-card.speakable::after {
+ content: '🔊';
+ position: absolute;
+ top: 4px;
+ right: 5px;
+ font-size: 0.6rem;
+ opacity: 0;
+ transition: opacity 0.15s;
+ }
+
+ .letter-card.speakable:hover::after {
+ opacity: 0.7;
+ }
+
+ @keyframes speakPulse {
+ 0% { box-shadow: 0 0 0 0 rgba(83,74,183,0.5); }
+ 70% { box-shadow: 0 0 0 8px rgba(83,74,183,0); }
+ 100% { box-shadow: 0 0 0 0 rgba(83,74,183,0); }
+ }
+
+ .letter-card.speaking {
+ animation: speakPulse 0.5s ease-out;
+ background: #EEEDFE;
+ border-color: #534AB7;
+ }
+
+ .molah.speakable {
+ transition: color 0.15s;
+ display: flex;
+ align-items: center;
+ gap: 0.5rem;
+ }
+
+ .molah.speakable:hover {
+ color: #534AB7;
+ }
+
+ .speak-icon {
+ font-size: 0.875rem;
+ opacity: 0.5;
+ transition: opacity 0.15s, transform 0.15s;
+ flex-shrink: 0;
+ }
+
+ .molah.speakable:hover .speak-icon {
+ opacity: 1;
+ transform: scale(1.2);
+ }
+
+ .molah.speaking {
+ color: #534AB7;
+ }
+
+ .molah.speaking .speak-icon {
+ opacity: 1;
+ animation: speakPulse 0.5s ease-out;
+ }
+
+ .letter-card {
+ background: #F1EFE8;
+ border-radius: 8px;
+ padding: 0.75rem;
+ text-align: center;
+ border: 1px solid #5F5E5A;
+ }
+
+ .letter-card .letter {
+ font-size: 1.5rem;
+ font-weight: 500;
+ color: #444441;
+ margin-bottom: 0.25rem;
+ }
+
+ .letter-card .sound {
+ font-size: 0.8125rem;
+ color: #5F5E5A;
+ }
+
+ .example-box {
+ background: #EEEDFE;
+ border-left: 4px solid #534AB7;
+ padding: 1rem 1.25rem;
+ margin: 1rem 0;
+ border-radius: 4px;
+ }
+
+ .example-box .molah {
+ font-weight: 500;
+ font-size: 1.125rem;
+ color: #3C3489;
+ margin-bottom: 0.25rem;
+ }
+
+ .example-box .pronunciation {
+ font-size: 0.875rem;
+ color: #534AB7;
+ font-style: italic;
+ margin-bottom: 0.5rem;
+ }
+
+ .example-box .translation {
+ font-size: 0.9375rem;
+ color: #3C3489;
+ }
+
+ .exercise {
+ background: #FAECE7;
+ border-radius: 8px;
+ padding: 1.25rem;
+ margin: 1.5rem 0;
+ }
+
+ .exercise h4 {
+ font-size: 1rem;
+ font-weight: 500;
+ color: #712B13;
+ margin-bottom: 0.75rem;
+ }
+
+ .exercise-item {
+ margin: 0.75rem 0;
+ padding-left: 1.5rem;
+ position: relative;
+ color: #712B13;
+ }
+
+ .exercise-item::before {
+ content: "→";
+ position: absolute;
+ left: 0;
+ color: #993C1D;
+ font-weight: 500;
+ }
+
+ .vocab-table {
+ width: 100%;
+ border-collapse: collapse;
+ margin: 1rem 0;
+ font-size: 0.9375rem;
+ }
+
+ .vocab-table th {
+ background: #D3D1C7;
+ padding: 0.75rem;
+ text-align: left;
+ font-weight: 500;
+ color: #444441;
+ border: 1px solid #5F5E5A;
+ }
+
+ .vocab-table td {
+ padding: 0.75rem;
+ border: 1px solid #5F5E5A;
+ }
+
+ .vocab-table tr:nth-child(even) {
+ background: #F1EFE8;
+ }
+
+ .progress-bar {
+ background: #D3D1C7;
+ height: 10px;
+ border-radius: 5px;
+ margin: 2rem 0 1rem;
+ overflow: hidden;
+ }
+
+ .progress-fill {
+ height: 100%;
+ background: #534AB7;
+ transition: width 0.3s ease;
+ border-radius: 5px;
+ }
+
+ .nav-buttons {
+ display: flex;
+ justify-content: space-between;
+ margin-top: 2rem;
+ gap: 1rem;
+ }
+
+ .btn {
+ padding: 0.875rem 1.75rem;
+ border-radius: 8px;
+ border: none;
+ font-size: 1rem;
+ font-weight: 500;
+ cursor: pointer;
+ transition: all 0.2s;
+ }
+
+ .btn-primary {
+ background: #534AB7;
+ color: white;
+ }
+
+ .btn-primary:hover {
+ background: #3C3489;
+ transform: translateY(-1px);
+ }
+
+ .btn-secondary {
+ background: white;
+ color: #534AB7;
+ border: 2px solid #534AB7;
+ }
+
+ .btn-secondary:hover {
+ background: #EEEDFE;
+ }
+
+ .btn:disabled {
+ opacity: 0.4;
+ cursor: not-allowed;
+ }
+
+ .btn:disabled:hover {
+ transform: none;
+ }
+
+ .hidden {
+ display: none;
+ }
+
+ footer {
+ text-align: center;
+ padding: 2rem;
+ color: #5F5E5A;
+ font-size: 0.875rem;
+ }
+
+ .dialogue {
+ background: #F1EFE8;
+ padding: 1.5rem;
+ border-radius: 8px;
+ margin: 1.5rem 0;
+ }
+
+ .dialogue p {
+ margin-bottom: 1rem;
+ }
+
+ .dialogue .speaker {
+ font-weight: 500;
+ color: #085041;
+ }
+
+ .dialogue .translation {
+ font-size: 0.875rem;
+ color: #5F5E5A;
+ font-style: italic;
+ margin-top: 0.25rem;
+ }
+
+ .note-box {
+ background: #FFF4E6;
+ border-left: 4px solid #EF9F27;
+ padding: 1rem 1.25rem;
+ margin: 1.5rem 0;
+ border-radius: 4px;
+ }
+
+ .note-box h4 {
+ color: #BA7517;
+ margin-bottom: 0.5rem;
+ font-size: 1rem;
+ }
+
+ .note-box p {
+ color: #854F0B;
+ font-size: 0.9375rem;
+ }
+
+ .comparison-table {
+ width: 100%;
+ border-collapse: collapse;
+ margin: 1.5rem 0;
+ }
+
+ .comparison-table th {
+ background: #534AB7;
+ color: white;
+ padding: 1rem;
+ text-align: left;
+ font-weight: 500;
+ }
+
+ .comparison-table td {
+ padding: 1rem;
+ border: 1px solid #D3D1C7;
+ }
+
+ .comparison-table tr:nth-child(even) {
+ background: #F1EFE8;
+ }
+
+ .advantage-card {
+ background: #E1F5EE;
+ border-radius: 8px;
+ padding: 1.25rem;
+ margin: 1rem 0;
+ border: 2px solid #0F6E56;
+ }
+
+ .advantage-card h4 {
+ color: #085041;
+ margin-bottom: 0.5rem;
+ font-size: 1.125rem;
+ }
+
+ .advantage-card p {
+ color: #085041;
+ font-size: 0.9375rem;
+ }
+
+ /* ── Language selection ── */
+ .lang-btn {
+ background: rgba(255,255,255,0.12);
+ border: 2px solid rgba(255,255,255,0.3);
+ border-radius: 12px;
+ padding: 1.25rem 1rem;
+ color: white;
+ cursor: pointer;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: 0.5rem;
+ transition: background 0.2s, border-color 0.2s, transform 0.15s;
+ font-family: 'Raleway', sans-serif;
+ }
+ .lang-btn:hover {
+ background: rgba(255,255,255,0.22);
+ border-color: rgba(255,255,255,0.6);
+ transform: translateY(-2px);
+ }
+ .lang-flag { font-size: 2rem; line-height: 1; }
+ .lang-name { font-size: 1rem; font-weight: 500; letter-spacing: 0.05em; }
+
+ .lang-switcher {
+ position: fixed;
+ top: 1rem;
+ right: 1rem;
+ z-index: 100;
+ display: none;
+ }
+ .lang-switcher select {
+ background: rgba(83,74,183,0.9);
+ color: white;
+ border: 1px solid rgba(255,255,255,0.3);
+ border-radius: 6px;
+ padding: 0.4rem 0.6rem;
+ font-size: 0.875rem;
+ cursor: pointer;
+ font-family: inherit;
+ }
+
+ .translating-overlay {
+ position: fixed;
+ inset: 0;
+ background: rgba(60,52,137,0.85);
+ z-index: 500;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ color: white;
+ font-family: 'Raleway', sans-serif;
+ }
+ .translating-spinner {
+ width: 48px; height: 48px;
+ border: 4px solid rgba(255,255,255,0.2);
+ border-top-color: white;
+ border-radius: 50%;
+ animation: spin 0.8s linear infinite;
+ margin-bottom: 1rem;
+ }
+ @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Lesson toolbar ── */
+        .lesson-toolbar { display:flex; flex-wrap:wrap; gap:0.375rem; padding:0.5rem 1rem; background:white; border-bottom:2px solid #EEEDFE; position:sticky; top:0; z-index:50; justify-content:center; box-shadow:0 1px 4px rgba(83,74,183,0.08); }
+        .lesson-toolbar-btn { background:#F1EFE8; border:1.5px solid #D3D1C7; border-radius:6px; padding:0.25rem 0.5rem; font-size:0.7rem; font-weight:600; cursor:pointer; font-family:inherit; color:#3C3489; transition:all 0.15s; min-width:1.9rem; text-align:center; }
+        .lesson-toolbar-btn:hover { background:#EEEDFE; border-color:#534AB7; }
+        .lesson-toolbar-btn.toolbar-active { background:#534AB7; color:white; border-color:#534AB7; }
+        .lesson-toolbar-label { font-size:0.65rem; color:#5F5E5A; display:flex; align-items:center; padding-right:0.25rem; white-space:nowrap; font-family:inherit; }
+        @media (max-width:500px) { .lesson-toolbar-label { display:none; } .lesson-toolbar-btn { font-size:0.6rem; padding:0.2rem 0.35rem; } }
+
+
+ /* ── Quiz styles ── */
+
+ .quiz-progress {
+ font-size: 0.9rem;
+ color: #5F5E5A;
+ margin-bottom: 1.25rem;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ }
+
+ .quiz-pip-row {
+ display: flex;
+ gap: 6px;
+ }
+
+ .quiz-pip {
+ width: 10px;
+ height: 10px;
+ border-radius: 50%;
+ background: #D3D1C7;
+ transition: background 0.2s;
+ }
+
+ .quiz-pip.done { background: #0F6E56; }
+ .quiz-pip.active { background: #534AB7; transform: scale(1.3); }
+
+ .quiz-card {
+ background: white;
+ border-radius: 12px;
+ padding: 2rem;
+ box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+ }
+
+ .quiz-audio-btn {
+ display: inline-flex;
+ align-items: center;
+ gap: 0.6rem;
+ background: #534AB7;
+ color: white;
+ border: none;
+ border-radius: 8px;
+ padding: 0.75rem 1.25rem;
+ font-size: 1rem;
+ font-weight: 500;
+ cursor: pointer;
+ margin-bottom: 1.25rem;
+ transition: background 0.2s, transform 0.1s;
+ }
+
+ .quiz-audio-btn:hover { background: #3C3489; transform: translateY(-1px); }
+ .quiz-audio-btn:active { transform: scale(0.97); }
+
+ .quiz-question {
+ font-size: 1.2rem;
+ font-weight: 500;
+ color: #2C2C2A;
+ margin-bottom: 1.5rem;
+ line-height: 1.5;
+ }
+
+ .quiz-choices {
+ display: flex;
+ flex-direction: column;
+ gap: 0.75rem;
+ }
+
+ .quiz-choice {
+ background: #F1EFE8;
+ border: 2px solid #D3D1C7;
+ border-radius: 8px;
+ padding: 0.875rem 1.25rem;
+ font-size: 1rem;
+ color: #2C2C2A;
+ cursor: pointer;
+ text-align: left;
+ transition: all 0.15s;
+ font-family: inherit;
+ }
+
+ .quiz-choice:hover:not(:disabled) {
+ border-color: #534AB7;
+ background: #EEEDFE;
+ transform: translateX(4px);
+ }
+
+ .quiz-choice:disabled { cursor: default; }
+
+ .quiz-choice.correct {
+ background: #E1F5EE;
+ border-color: #0F6E56;
+ color: #085041;
+ }
+
+ .quiz-choice.wrong {
+ background: #FDE8E0;
+ border-color: #C04A1E;
+ color: #712B13;
+ opacity: 0.6;
+ }
+
+ .quiz-choice.selected-correct {
+ background: #E1F5EE;
+ border-color: #0F6E56;
+ color: #085041;
+ font-weight: 600;
+ opacity: 1 !important;
+ }
+
+ .quiz-choice.selected-wrong {
+ background: #FDE8E0;
+ border-color: #C04A1E;
+ color: #712B13;
+ font-weight: 600;
+ opacity: 1 !important;
+ }
+
+ .quiz-feedback {
+ margin-top: 1.25rem;
+ padding: 0.875rem 1.25rem;
+ border-radius: 8px;
+ font-size: 0.9375rem;
+ }
+
+ .feedback-correct {
+ background: #E1F5EE;
+ border-left: 4px solid #0F6E56;
+ color: #085041;
+ }
+
+ .feedback-wrong {
+ background: #FDE8E0;
+ border-left: 4px solid #C04A1E;
+ color: #712B13;
+ }
+
+ /* Results ring */
+ .quiz-result-ring {
+ width: 160px;
+ height: 160px;
+ border-radius: 50%;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ margin: 0 auto 1.5rem;
+ border: 8px solid;
+ }
+
+ .ring-pass { border-color: #0F6E56; background: #E1F5EE; }
+ .ring-fail { border-color: #C04A1E; background: #FDE8E0; }
+
+ .ring-inner {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ }
+
+ .ring-score {
+ font-size: 2rem;
+ font-weight: 600;
+ color: #2C2C2A;
+ line-height: 1;
+ }
+
+ .ring-label {
+ font-size: 1rem;
+ color: #5F5E5A;
+ }
+
+ .quiz-result-msg {
+ text-align: center;
+ font-size: 1.1rem;
+ color: #2C2C2A;
+ margin-bottom: 0.5rem;
+ }
+
+ .feedback-explain {
+ margin-top: 0.75rem;
+ padding-top: 0.75rem;
+ border-top: 1px solid rgba(0,0,0,0.1);
+ font-size: 0.9rem;
+ line-height: 1.6;
+ font-weight: 400;
+ }
+
+ /* ── Signup form ── */
+ .signup-box {
+ background: white;
+ border-radius: 12px;
+ padding: 2rem;
+ margin-top: 2rem;
+ box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+ border-top: 4px solid #534AB7;
+ }
+
+ .signup-header {
+ display: flex;
+ align-items: flex-start;
+ gap: 1rem;
+ margin-bottom: 1.75rem;
+ }
+
+ .signup-icon {
+ font-size: 2.25rem;
+ line-height: 1;
+ flex-shrink: 0;
+ }
+
+ .signup-title {
+ font-size: 1.25rem;
+ font-weight: 600;
+ color: #3C3489;
+ margin: 0 0 0.375rem;
+ }
+
+ .signup-subtitle {
+ font-size: 0.9375rem;
+ color: #5F5E5A;
+ margin: 0;
+ line-height: 1.5;
+ }
+
+ .signup-fields {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 1rem;
+ }
+
+ @media (max-width: 540px) {
+ .signup-fields { grid-template-columns: 1fr; }
+ }
+
+ .signup-field-group {
+ display: flex;
+ flex-direction: column;
+ gap: 0.375rem;
+ }
+
+ .signup-label {
+ font-size: 0.875rem;
+ font-weight: 500;
+ color: #444441;
+ }
+
+ .signup-input {
+ padding: 0.7rem 0.875rem;
+ border: 2px solid #D3D1C7;
+ border-radius: 7px;
+ font-size: 0.9375rem;
+ font-family: inherit;
+ color: #2C2C2A;
+ background: #FAFAF8;
+ transition: border-color 0.15s;
+ }
+
+ .signup-input:focus {
+ outline: none;
+ border-color: #534AB7;
+ background: white;
+ }
+
+ .signup-checks {
+ display: flex;
+ flex-direction: column;
+ gap: 0.5rem;
+ margin-top: 0.25rem;
+ }
+
+ .signup-check-label {
+ display: flex;
+ align-items: center;
+ gap: 0.5rem;
+ font-size: 0.9375rem;
+ color: #2C2C2A;
+ cursor: pointer;
+ }
+
+ .signup-check-label input[type="checkbox"] {
+ width: 16px;
+ height: 16px;
+ accent-color: #534AB7;
+ cursor: pointer;
+ }
+
+ .signup-error {
+ grid-column: 1 / -1;
+ background: #FDE8E0;
+ border-left: 4px solid #C04A1E;
+ color: #712B13;
+ padding: 0.75rem 1rem;
+ border-radius: 6px;
+ font-size: 0.9rem;
+ }
+
+ .btn-signup {
+ background: #534AB7;
+ color: white;
+ border: none;
+ border-radius: 8px;
+ padding: 0.875rem 2rem;
+ font-size: 1rem;
+ font-weight: 500;
+ cursor: pointer;
+ font-family: inherit;
+ transition: background 0.2s, transform 0.1s;
+ width: 100%;
+ margin-top: 0.25rem;
+ }
+
+ .btn-signup:hover { background: #3C3489; transform: translateY(-1px); }
+ .btn-signup:active { transform: scale(0.99); }
+
+ .signup-privacy {
+ font-size: 0.8125rem;
+ color: #5F5E5A;
+ margin-top: 0.625rem;
+ text-align: center;
+ }
+
+ .signup-success {
+ text-align: center;
+ padding: 1.5rem 1rem;
+ background: #E1F5EE;
+ border-radius: 8px;
+ }
+
+ .btn-verblist {
+ background: #EEEDFE;
+ color: #3C3489;
+ border: 2px solid #CECBF6;
+ border-radius: 7px;
+ padding: 0.5rem 1rem;
+ font-size: 0.875rem;
+ font-weight: 500;
+ cursor: pointer;
+ white-space: nowrap;
+ font-family: inherit;
+ transition: background 0.15s, border-color 0.15s;
+ flex-shrink: 0;
+ }
+ .btn-verblist:hover { background: #CECBF6; border-color: #534AB7; }
+ /* Save & summary */
+ .btn-save {
+ background: #0F6E56;
+ color: white;
+ border: none;
+ padding: 0.75rem 1.5rem;
+ border-radius: 8px;
+ font-size: 0.9375rem;
+ font-weight: 500;
+ cursor: pointer;
+ display: inline-flex;
+ align-items: center;
+ gap: 0.5rem;
+ transition: background 0.2s, transform 0.1s;
+ font-family: inherit;
+ }
+ .btn-save:hover { background: #085041; transform: translateY(-1px); }
+ .btn-save.saved { background: #534AB7; }
+
+ .save-bar {
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ gap: 1rem;
+ margin-top: 1.25rem;
+ padding-top: 1.25rem;
+ border-top: 1px solid #D3D1C7;
+ }
+ .save-note {
+ font-size: 0.8125rem;
+ color: #5F5E5A;
+ }
+
+ .summary-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+ gap: 1rem;
+ margin: 1.5rem 0;
+ }
+ .summary-card {
+ background: white;
+ border-radius: 10px;
+ padding: 1.25rem;
+ box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+ display: flex;
+ align-items: center;
+ gap: 1rem;
+ border: 2px solid transparent;
+ transition: border-color 0.2s, transform 0.15s;
+ }
+ .summary-card:hover { border-color: #534AB7; transform: translateY(-2px); cursor: pointer; }
+ .summary-badge {
+ width: 56px;
+ height: 56px;
+ border-radius: 50%;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ flex-shrink: 0;
+ font-weight: 600;
+ font-size: 0.875rem;
+ line-height: 1.2;
+ }
+ .badge-pass { background: #E1F5EE; color: #085041; border: 2px solid #0F6E56; }
+ .badge-fail { background: #FDE8E0; color: #712B13; border: 2px solid #C04A1E; }
+ .badge-none { background: #F1EFE8; color: #5F5E5A; border: 2px dashed #D3D1C7; }
+ .summary-info { flex: 1; }
+ .summary-title { font-weight: 500; color: #2C2C2A; margin-bottom: 0.2rem; }
+ .summary-sub { font-size: 0.875rem; color: #5F5E5A; }
+ .summary-retry { font-size: 0.8125rem; color: #534AB7; font-weight: 500; }
+
+ .summary-total {
+ background: #EEEDFE;
+ border-radius: 10px;
+ padding: 1.5rem;
+ text-align: center;
+ margin-bottom: 1.5rem;
+ }
+ .summary-total-score { font-size: 2rem; font-weight: 600; color: #3C3489; }
+ .summary-total-label { font-size: 0.9375rem; color: #534AB7; margin-top: 0.25rem; }
+
+ </style>
+</head>
+<body>
+ <div class="header">
+ <h1>Molah</h1>
+ <div class="header-rule"></div>
+ <p>A minimal lingua franca for global communication</p>
+ </div>
+
+ <!-- Language Selection Landing Page -->
+ <div id="langSelect" style="
+ position:fixed;inset:0;z-index:1000;
+ background:linear-gradient(135deg,#3C3489 0%,#534AB7 50%,#3C3489 100%);
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ padding:2rem;text-align:center;
+ ">
+ <div style="max-width:560px;width:100%;">
+ <h1 style="
+ font-family:'Cinzel',Georgia,serif;
+ font-size:5rem;font-weight:900;
+ letter-spacing:0.25em;color:white;
+ text-shadow:0 2px 20px rgba(0,0,0,0.25);
+ margin-bottom:0.25em;line-height:1;
+ ">Molah</h1>
+ <div style="width:80px;height:2px;background:rgba(255,255,255,0.4);margin:0.75rem auto 0.9rem;"></div>
+ <p style="
+ font-family:'Raleway',sans-serif;
+ font-size:0.9375rem;font-weight:300;
+ letter-spacing:0.18em;text-transform:uppercase;
+ color:rgba(255,255,255,0.85);margin-bottom:2.5rem;
+ ">A minimal lingua franca for global communication</p>
+ <p style="color:rgba(255,255,255,0.7);font-size:1rem;margin-bottom:1.5rem;font-family:'Raleway',sans-serif;">
+ Choose your language / Elige tu idioma / Choisissez votre langue / 言語を選択
+ </p>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:400px;margin:0 auto;">
+ <button class="lang-btn" onclick="selectLang('en')">
+ <span class="lang-flag">🇬🇧</span>
+ <span class="lang-name">English</span>
+ </button>
+ <button class="lang-btn" onclick="selectLang('es')">
+ <span class="lang-flag">🇪🇸</span>
+ <span class="lang-name">Español</span>
+ </button>
+ <button class="lang-btn" onclick="selectLang('fr')">
+ <span class="lang-flag">🇫🇷</span>
+ <span class="lang-name">Français</span>
+ </button>
+ <button class="lang-btn" onclick="selectLang('ja')">
+ <span class="lang-flag">🇯🇵</span>
+ <span class="lang-name">日本語</span>
+ </button>
+ </div>
+ <p style="color:rgba(255,255,255,0.45);font-size:0.75rem;margin-top:1.5rem;font-family:'Raleway',sans-serif;">
+ You can change language at any time
+ </p>
+ </div>
+ </div>
+
+ <!-- Language switcher (shown after lang is chosen) -->
+ <div class="lang-switcher" id="langSwitcher">
+ <select onchange="changeLang(this.value)">
+ <option value="en">🇬🇧 EN</option>
+ <option value="es">🇪🇸 ES</option>
+ <option value="fr">🇫🇷 FR</option>
+ <option value="ja">🇯🇵 JP</option>
+ </select>
+ </div>
+
+ <!-- Translation overlay -->
+ <div class="translating-overlay" id="transOverlay" style="display:none;">
+ <div class="translating-spinner"></div>
+ <p id="transMsg">Translating...</p>
+ </div>
+
+ <!-- Lesson Navigation Toolbar -->
+ <div class="lesson-toolbar" id="lessonToolbar" style="display:none;">
+  <span class="lesson-toolbar-label">Lessons:</span>
+  <button class="lesson-toolbar-btn toolbar-active" id="tbtn0" onclick="jumpToLesson(0)" title="Introduction">Intro</button>
+  <button class="lesson-toolbar-btn" id="tbtnoverview" onclick="jumpToLesson('OV')" title="Overview">OV</button>
+  <button class="lesson-toolbar-btn" id="tbtn1" onclick="jumpToLesson(1)" title="The Alphabet">1</button>
+  <button class="lesson-toolbar-btn" id="tbtn2" onclick="jumpToLesson(2)" title="Greetings">2</button>
+  <button class="lesson-toolbar-btn" id="tbtn3" onclick="jumpToLesson(3)" title="First Words">3</button>
+  <button class="lesson-toolbar-btn" id="tbtn4" onclick="jumpToLesson(4)" title="Word Order">4</button>
+  <button class="lesson-toolbar-btn" id="tbtn5" onclick="jumpToLesson(5)" title="Tenses">5</button>
+  <button class="lesson-toolbar-btn" id="tbtn6" onclick="jumpToLesson(6)" title="Questions">6</button>
+  <button class="lesson-toolbar-btn" id="tbtn7" onclick="jumpToLesson(7)" title="Endings">7</button>
+  <button class="lesson-toolbar-btn" id="tbtn8" onclick="jumpToLesson(8)" title="Conversations">8</button>
+  <button class="lesson-toolbar-btn" id="tbtn9" onclick="jumpToLesson(9)" title="Verb List">9</button>
+  <button class="lesson-toolbar-btn" id="tbtn10" onclick="jumpToLesson(10)" title="Colors">10</button>
+  <button class="lesson-toolbar-btn" id="tbtn11" onclick="jumpToLesson(11)" title="Numbers">11</button>
+  <button class="lesson-toolbar-btn" id="tbtn12" onclick="jumpToLesson(12)" title="Negations">12</button>
+  <button class="lesson-toolbar-btn" id="tbtn13" onclick="jumpToLesson(13)" title="Descriptors">13</button>
+  <button class="lesson-toolbar-btn" id="tbtn14" onclick="jumpToLesson(14)" title="School">14</button>
+  <button class="lesson-toolbar-btn" id="tbtn15" onclick="jumpToLesson(15)" title="Making Words">15</button>
+  <button class="lesson-toolbar-btn" id="tbtn16" onclick="jumpToLesson(16)" title="Why Molah">16</button>
+ </div>
+
+ <div class="container">
+ <div class="progress-bar">
+ <div class="progress-fill" id="progress" style="width: 10%"></div>
+ </div>
+
+ <div id="resumeBanner" class="hidden" style="background:#E1F5EE;border:2px solid #0F6E56;border-radius:10px;padding:1rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+ <div>
+ <strong style="color:#085041;">Welcome!</strong>
+ <span style="color:#085041;margin-left:0.5rem;">If you have saved progress, you can pick up where you left off!</span>
+ </div>
+ <div style="display:flex;gap:0.75rem;">
+ <button id="resumeBtn" class="btn-save">▶ Resume</button>
+ <button onclick="clearProgress();document.getElementById('resumeBanner').classList.add('hidden');" style="background:none;border:none;color:#085041;cursor:pointer;font-size:0.875rem;text-decoration:underline;font-family:inherit;">Start fresh</button>
+ </div>
+ </div>
+
+ <!-- Lesson 0: Introduction (only shows first time) -->
+ <div class="intro" id="lesson0">
+ <h2>Why learn Molah?</h2>
+ <p>Molah is a new language designed specifically as a lingua franca for trade, travel, and basic cross-cultural communication. Unlike English or other natural languages that evolved over centuries with complex rules and thousands of exceptions, Molah was built from the ground up to be learnable in weeks, not years.</p>
+
+ <p style="margin-top: 1.25rem;">Molah was designed by Santullo, a world traveler and PhD in Communication Studies who has lived in 5 different countries. Because Santullo always struggled with perfecting other languages, he decided it was time to give the world a functional but simple language. In fact, Molah is the world's simplest language!</p>
+
+ <div class="benefits">
+ <div class="benefit-card">
+ <h3>Learn in weeks</h3>
+ <p>Only 16 letters, 80 core words, and zero grammatical exceptions</p>
+ </div>
+ <div class="benefit-card">
+ <h3>Crystal clear</h3>
+ <p>Every letter has one sound, distinct mouth positions prevent confusion</p>
+ </div>
+ <div class="benefit-card">
+ <h3>Practical focus</h3>
+ <p>Built for real-world situations: shopping, travel, basic conversation</p>
+ </div>
+ </div>
+
+ <p style="margin-top: 1.5rem;">Whether you're a business traveler, tourist, or someone who wants to communicate across language barriers, Molah gives you the essential tools for mutual understanding.</p>
+
+ <div class="nav-buttons">
+ <button class="btn btn-secondary" disabled>Previous</button>
+ <button class="btn btn-primary" onclick="nextLesson('OV')">Overview & start learning →</button>
+ </div>
+ </div>
+
+
+ <!-- Lesson Overview -->
+ <div class="lesson hidden" id="lessonOV">
+ <h2 style="font-size:1.75rem;font-weight:500;margin-bottom:1.5rem;color:#3C3489;border-bottom:2px solid #CECBF6;padding-bottom:0.75rem;">Overview of the Molah language</h2>
+
+ <p>Before diving into the lessons, here is a quick map of what makes Molah different from every natural language you may have encountered. Each of these principles will be demonstrated in the lessons that follow.</p>
+
+ <div class="advantage-card" style="margin-top:1.5rem;">
+ <h4>Easy alphabet — one sound per letter</h4>
+ <p>Molah uses only 16 letters. Every letter makes exactly one sound, always. There are no silent letters, no letters that change sound depending on context, and no combinations that produce unexpected sounds. What you see is what you say.</p>
+ </div>
+
+ <div class="advantage-card">
+ <h4>Simple sentence structure — Subject · Verb · Object</h4>
+ <p>Every Molah sentence follows the same fixed order: who does something, what they do, and what they do it to. <em>Ya bama brim</em> — I (subject) want (verb) drink (object). This order never changes, which means you never have to guess where to put a word.</p>
+ </div>
+
+ <div class="advantage-card">
+ <h4>No tonal structure</h4>
+ <p>In languages like Mandarin or Vietnamese, the pitch of your voice changes the meaning of a word entirely. Molah has no tones — the same word spoken high or low, fast or slow, means the same thing. Only a rising tone at the end of a sentence signals a question, and even that is optional when a question word is present.</p>
+ </div>
+
+ <div class="advantage-card">
+ <h4>No irregular verb forms</h4>
+ <p>In English, <em>go</em> becomes <em>went</em> in the past — a completely different word. In Molah, every verb follows the same rule without exception: add <strong>-ko</strong> for past, add <strong>-tu</strong> for future. <em>Bo</em> (go) becomes <em>bo-ko</em> (went) and <em>bo-tu</em> (will go). Always. Every verb. No exceptions.</p>
+ </div>
+
+ <div class="advantage-card">
+ <h4>No articles</h4>
+ <p>English requires you to choose between <em>a</em>, <em>an</em>, and <em>the</em> — and the rules are complex. Molah has no articles at all. <em>Ya bama brim</em> means both "I want a drink" and "I want the drink." Context makes the meaning clear, as it does in most real conversations. But you can also add a word for here/this (<strong>Wu</strong>) or there/that (<strong>Wutu</strong>) if needed.</p>
+ </div>
+
+ <div class="advantage-card">
+ <h4>No noun classes</h4>
+ <p>Many languages assign every noun to a gender or class — masculine, feminine, neuter — and this forces every surrounding word (adjectives, articles, verbs) to change its form to match. French, Spanish, German, Arabic, and Swahili all do this. Molah does not. A noun is just a noun. Nothing around it changes because of what kind of thing it is.</p>
+ </div>
+
+ <div class="advantage-card">
+ <h4>Combine or repeat words to make new meanings</h4>
+ <p>Molah builds new concepts from existing ones rather than introducing new vocabulary. <em>Smakkr</em> (make) + <em>Wif</em> (place) = <em>Smakkr-Wif</em> (build). <em>Mor</em> (mother) doubled = <em>Mor-mor</em> (grandmother). <em>Yuhm</em> (good) doubled = <em>Yuhm-yuhm</em> (really good). Once you know the roots, the combinations are transparent.</p>
+ </div>
+
+ <div style="background:#EEEDFE;border-radius:10px;padding:1.5rem;margin-top:1.5rem;text-align:center;">
+ <p style="color:#3C3489;font-size:1rem;font-weight:500;">These seven principles are all you need to understand before starting. Everything else follows naturally from them.</p>
+ </div>
+
+ <div class="nav-buttons">
+ <button class="btn btn-secondary" onclick="nextLesson(0)">← Back</button>
+ <button class="btn btn-primary" onclick="nextLesson(1)">Start Lesson 1: The Alphabet →</button>
+ </div>
+ </div>
+
+ <!-- Lesson 1: The Alphabet -->
+ <div class="lesson hidden" id="lesson1">
+ <h2>Lesson 1: The Molah alphabet</h2>
+ 
+ <p>Molah uses only 16 letters, each with a distinct mouth position and sound. This makes it impossible to confuse similar sounds when speaking or listening.</p>
+
+ <h3>Vowels (5)</h3>
+ <div class="alphabet-grid">
+ <div class="letter-card">
+ <div class="letter">A</div>
+ <div class="sound">auh</div>
+ </div>
+ <div class="letter-card">
+ <div class="letter">I</div>
+ <div class="sound">ihh</div>
+ </div>
+ <div class="letter-card">
+ <div class="letter">O</div>
+ <div class="sound">ohh</div>
+ </div>
+ <div class="letter-card">
+ <div class="letter">U</div>
+ <div class="sound">oowh</div>
+ </div>
+ <div class="letter-card">
+ <div class="letter">Y</div>
+ <div class="sound">eee</div>
+ </div>
+ </div>
+
+ <h3>Consonants (11)</h3>
+ <div class="alphabet-grid">
+ <div class="letter-card">
+ <div class="letter">B</div>
+ <div class="sound">buh</div>
+ </div>
+ <div class="letter-card">
+ <div class="letter">F</div>
+ <div class="sound">fih</div>
+ </div>
+ <div class="letter-card">
+ <div class="letter">H</div>
+ <div class="sound">heh</div>
+ </div>
+ <div class="letter-card">
+ <div class="letter">K</div>
+ <div class="sound">kuh</div>
+ </div>
+ <div class="letter-card">
+ <div class="letter">L</div>
+ <div class="sound">luh</div>
+ </div>
+ <div class="letter-card">
+ <div class="letter">M</div>
+ <div class="sound">mmm</div>
+ </div>
+ <div class="letter-card">
+ <div class="letter">R</div>
+ <div class="sound">err</div>
+ </div>
+ <div class="letter-card">
+ <div class="letter">S</div>
+ <div class="sound">sss</div>
+ </div>
+ <div class="letter-card">
+ <div class="letter">T</div>
+ <div class="sound">tuh</div>
+ </div>
+ <div class="letter-card">
+ <div class="letter">W</div>
+ <div class="sound">wuh</div>
+ </div>
+ <div class="letter-card">
+ <div class="letter">Z</div>
+ <div class="sound">zzz</div>
+ </div>
+ </div>
+
+ <div class="exercise">
+ <h4>Practice: Pronunciation</h4>
+ <div class="exercise-item">Say each letter's sound 3 times, focusing on the distinct mouth position</div>
+ <div class="exercise-item">Practice vowels: A-I-O-U-Y</div>
+ <div class="exercise-item">Practice consonants: B-F-H-K-L-M-R-S-T-W-Z</div>
+ </div>
+
+ <div class="nav-buttons">
+ <button class="btn btn-secondary" onclick="nextLesson('OV')">← Back</button>
+ <button class="btn btn-secondary" onclick="skipQuiz(1, 2)">Skip quiz</button>
+ <button class="btn btn-primary" onclick="showQuiz(1)">Quiz: Alphabet →</button>
+ </div>
+ </div>
+
+ <!-- Quiz 1 -->
+ <div class="lesson hidden" id="quiz1"></div>
+
+ <!-- Lesson 2: Greetings & Essentials -->
+ <div class="lesson hidden" id="lesson2">
+ <h2>Lesson 2: Greetings & essential words</h2>
+
+ <p>Before diving into full sentences, here are the words you'll use most in any first encounter — greetings, proximity, and showing respect.</p>
+
+ <h3>Greetings</h3>
+ <table class="vocab-table">
+ <tr>
+ <th>Molah</th>
+ <th>Pronunciation</th>
+ <th>English</th>
+ </tr>
+ <tr>
+ <td><strong>Lowi</strong></td>
+ <td>loh-wee</td>
+ <td>Hello / Hi</td>
+ </tr>
+ <tr>
+ <td><strong>Bolah</strong></td>
+ <td>boh-lah</td>
+ <td>Goodbye (go with happiness)</td>
+ </tr>
+ <tr>
+ <td><strong>Low</strong></td>
+ <td>lohw</td>
+ <td>Yes / Love / Thank you</td>
+ </tr>
+ <tr>
+ <td><strong>Bah-t</strong></td>
+ <td>baht</td>
+ <td>No</td>
+ </tr>
+ <tr>
+ <td><strong>Molah!</strong></td>
+ <td>moe-lah</td>
+ <td>I recognize you! / Hello back!</td>
+ </tr>
+ </table>
+
+ <div class="note-box">
+ <h4>Molah! — the response to a greeting</h4>
+ <p>When someone says <strong>Lowi!</strong> to you, the natural response is <strong>Molah!</strong> — the name of the language itself used as a joyful acknowledgment. It carries the feeling of "I see you!", "I know you!", or "We share this!" Like Aloha in Hawaiian or Shalom in Hebrew, the word is bigger than its literal parts. A full greeting exchange goes:</p>
+ <div style="background:#EEEDFE;border-radius:8px;padding:1rem 1.25rem;margin-top:0.75rem;font-size:0.9375rem;">
+ <div style="margin-bottom:0.5rem;"><strong style="color:#3C3489;">Person A:</strong> <em>Lowi!</em> <span style="color:#5F5E5A;">(Hello!)</span></div>
+ <div><strong style="color:#3C3489;">Person B:</strong> <em>Molah!</em> <span style="color:#5F5E5A;">(I recognize you! / Hello back!)</span></div>
+ </div>
+ <p style="margin-top:0.75rem;">With Kif for formality: <em>Kif Lowi!</em> → <em>Kif Molah!</em></p>
+ </div>
+
+ <div class="note-box">
+ <h4>Bolah explained</h4>
+ <p>Bolah combines <strong>Bo</strong> (go) with the <strong>lah</strong> ending (happy/warm). So goodbye in Molah literally means "go happily" — a warm send-off built from words you already know.</p>
+ </div>
+
+ <h3>Formal respect — Kif</h3>
+ <table class="vocab-table">
+ <tr>
+ <th>Molah</th>
+ <th>Pronunciation</th>
+ <th>English</th>
+ </tr>
+ <tr>
+ <td><strong>Kif</strong></td>
+ <td>keef</td>
+ <td>Formal respect marker</td>
+ </tr>
+ </table>
+
+ <div class="note-box">
+ <h4>[!] and [~] — Molah's two special sounds</h4>
+ <p><strong>[!]</strong> is a tongue click — the only click in Molah — and means <strong>"and"</strong>. It is written as [!] and spoken as a single sharp click of the tongue against the roof of the mouth. Example: <em>Ya bama it [!] brim</em> = I want food and drink.</p>
+ <p style="margin-top:0.75rem;"><strong>[~]</strong> is made by clenching the teeth and sucking air inward — a reverse "suh" sound. It means <strong>"but" / "however" / "0" (zero)</strong>. Written as [~]. Example: <em>Ya bama it [~] bah-t brim</em> = I want food but not drink. As a number, [~] = zero.</p>
+ </div>
+
+ <div class="note-box">
+ <h4>When to use Kif</h4>
+ <p>Place <strong>Kif</strong> at the start of any sentence to signal deep formal respect — reserved for someone of great importance, wealth, or power. Use it rarely and deliberately. Overusing it weakens its meaning.</p>
+ </div>
+
+ <div class="example-box">
+ <div class="molah speakable" onclick="speak('Keef Lowi', this)" title="Tap to hear">Kif Lowi<span class="speak-icon">🔊</span></div>
+ <div class="pronunciation">(keef loh-wee)</div>
+ <div class="translation">Formal hello — said to someone of great importance.</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah speakable" onclick="speak('Keef Bolah', this)" title="Tap to hear">Kif Bolah<span class="speak-icon">🔊</span></div>
+ <div class="pronunciation">(keef boh-lah)</div>
+ <div class="translation">Formal goodbye — a deeply respectful farewell.</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah speakable" onclick="speak('Keef, ya bama yoom it-yoom', this)" title="Tap to hear">Kif, ya bama yuhm it-yuhm.<span class="speak-icon">🔊</span></div>
+ <div class="pronunciation">(keef, yah bah-mah yoom it-yoom)</div>
+ <div class="translation">Formal: I want good food. (Said respectfully to an important host.)</div>
+ </div>
+
+ <h3>Here & there / This & that</h3>
+ <table class="vocab-table">
+ <tr>
+ <th>Molah</th>
+ <th>Pronunciation</th>
+ <th>English</th>
+ </tr>
+ <tr>
+ <td><strong>Wu</strong></td>
+ <td>woo</td>
+ <td>Here / This (close)</td>
+ </tr>
+ <tr>
+ <td><strong>Wutu</strong></td>
+ <td>woo-too</td>
+ <td>There / That (far)</td>
+ </tr>
+ </table>
+
+ <h3>Transition words — the Zee- prefix</h3>
+ <p>The prefix <strong>Zee-</strong> signals a reason or connection between ideas. It is Molah's way of linking clauses and explaining relationships.</p>
+ <table class="vocab-table">
+ <tr>
+ <th>Molah</th>
+ <th>Pronunciation</th>
+ <th>English</th>
+ </tr>
+ <tr>
+ <td><strong>Zee-kahb</strong></td>
+ <td>zee-kahb</td>
+ <td>Because / For / For the reason that</td>
+ </tr>
+ <tr>
+ <td><strong>Zee-bobo</strong></td>
+ <td>zee-boh-boh</td>
+ <td>After / Afterwards (going forward in time)</td>
+ </tr>
+ </table>
+
+ <div class="note-box">
+ <h4>The Zee- prefix</h4>
+ <p>Zee- marks any word as a <strong>connector</strong> — something that links what came before to what comes after. points direction (to/toward). Zee-kahb gives a reason (because). Zee-bobo places something in sequence (after). Notice that Zee-bobo doubles Bo (go) — <em>bobo</em> = going-going = continued forward motion = afterwards.</p>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Ya bo musyum.</div>
+ <div class="pronunciation">(yah boh moo-syum)</div>
+ <div class="translation">I go to the museum.</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Ya bama brim zee-kahb ya tami.</div>
+ <div class="pronunciation">(yah bah-mah brim zee-kahb yah tah-mee)</div>
+ <div class="translation">I want drink because I am sick.</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Mo it zee-bobo mo sily.</div>
+ <div class="pronunciation">(moh it zee-boh-boh moh sih-lee)</div>
+ <div class="translation">We eat, after which we play.</div>
+ </div>
+
+ <h3>Place words</h3>
+ <table class="vocab-table">
+ <tr>
+ <th>Molah</th>
+ <th>Pronunciation</th>
+ <th>English</th>
+ </tr>
+ <tr>
+ <td><strong>Sysi-wif</strong></td>
+ <td>sis-ee-wif</td>
+ <td>Movie theater (sysi-place)</td>
+ </tr>
+ <tr>
+ <td><strong>Ur-Hamma-Wif</strong></td>
+ <td>ur-hah-mah-wif</td>
+ <td>Hospital (be-care-place)</td>
+ </tr>
+ </table>
+
+ <div class="note-box">
+ <h4>Wu and Wutu</h4>
+ <p><strong>Wu</strong> = here/this — close to you. <strong>Wutu</strong> extends Wu with <strong>-tu</strong>, already used in Molah to indicate something forward or away (future tense, tomorrow). So wutu = "here but forward" = there/that. One suffix, two uses: time and space.</p>
+ </div>
+
+ <div class="example-box">
+ <div class="molah speakable" onclick="speak('Ya bama wu', this)" title="Tap to hear">Ya bama wu.<span class="speak-icon">🔊</span></div>
+ <div class="pronunciation">(yah bah-mah woo)</div>
+ <div class="translation">I want this.</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah speakable" onclick="speak('Wutu ur yoom', this)" title="Tap to hear">Wutu ur yuhm.<span class="speak-icon">🔊</span></div>
+ <div class="pronunciation">(woo-too ur yoom)</div>
+ <div class="translation">That is good.</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah speakable" onclick="speak('Mo yabur fish wu', this)" title="Tap to hear">Mo yabur fish wu.<span class="speak-icon">🔊</span></div>
+ <div class="pronunciation">(moh yah-bur fish woo)</div>
+ <div class="translation">We have fish here. (yabur = have) (From the shop dialogue — wu already appeared naturally!)</div>
+ </div>
+
+ <div class="exercise">
+ <h4>Practice</h4>
+ <div class="exercise-item">Greet a friend: Lowi!</div>
+ <div class="exercise-item">Respond to a greeting: Molah!</div>
+ <div class="exercise-item">Full exchange: Lowi! → Molah!</div>
+ <div class="exercise-item">Say goodbye warmly: Bolah!</div>
+ <div class="exercise-item">Greet a dignitary formally: Kif Lowi</div>
+ <div class="exercise-item">Point to something nearby: Wu (this)</div>
+ <div class="exercise-item">Point to something distant: Wutu (that)</div>
+ <div class="exercise-item">Say "I want that": Ya bama wutu</div>
+ <div class="exercise-item">Say "I go to the museum": Ya bo musyum</div>
+ <div class="exercise-item">Say "because I am sick": zee-kahb ya tami</div>
+ <div class="exercise-item">Say "after": Zee-bobo</div>
+ <div class="exercise-item">Say "movie theater": Sysi-wif</div>
+ <div class="exercise-item">Say "hospital": Ur-Hamma-Wif</div>
+ </div>
+
+ <div class="nav-buttons">
+ <button class="btn btn-secondary" onclick="nextLesson(1)">← Previous</button>
+ <button class="btn btn-secondary" onclick="skipQuiz(2, 3)">Skip quiz</button>
+ <button class="btn btn-primary" onclick="showQuiz(2)">Quiz: Greetings & Essentials →</button>
+ </div>
+ </div>
+
+ <!-- Quiz 2 -->
+ <div class="lesson hidden" id="quiz2"></div>
+
+ <!-- Lesson 2: First Words -->
+ <div class="lesson hidden" id="lesson3">
+ <h2>Lesson 3: Your first Molah words</h2>
+ 
+ <h3>Pronouns</h3>
+ <table class="vocab-table">
+ <tr>
+ <th>Molah</th>
+ <th>Pronunciation</th>
+ <th>English</th>
+ </tr>
+ <tr>
+ <td><strong>Ya</strong></td>
+ <td>yah</td>
+ <td>I, me, my, mine</td>
+ </tr>
+ <tr>
+ <td><strong>Yo</strong></td>
+ <td>yoh</td>
+ <td>You, your, yours</td>
+ </tr>
+ <tr>
+ <td><strong>Ham</strong></td>
+ <td>hahm</td>
+ <td>He, she, him, her, his, hers, their, them</td>
+ </tr>
+ <tr>
+ <td><strong>Mo</strong></td>
+ <td>moh</td>
+ <td>We, us, our</td>
+ </tr>
+ </table>
+
+ <div class="note-box">
+ <h4>Important: Ham is gender-neutral</h4>
+ <p>In Molah, "ham" is used for all third-person references regardless of gender. There is no distinction between he/she/his/her/their - they all use "ham". Context makes the meaning clear.</p>
+ </div>
+
+ <h3>Essential verbs</h3>
+ <table class="vocab-table">
+ <tr>
+ <th>Molah</th>
+ <th>Pronunciation</th>
+ <th>English</th>
+ </tr>
+ <tr>
+ <td><strong>Ur</strong></td>
+ <td>ur</td>
+ <td>To be (am, is, are)</td>
+ </tr>
+ <tr>
+ <td><strong>Bo</strong></td>
+ <td>boh</td>
+ <td>To go</td>
+ </tr>
+ <tr>
+ <td><strong>Bama</strong></td>
+ <td>bah-mah</td>
+ <td>To want</td>
+ </tr>
+ <tr>
+ <td><strong>Kab</strong></td>
+ <td>kahb</td>
+ <td>To understand</td>
+ </tr>
+ <tr>
+ <td><strong>Low</strong></td>
+ <td>lohw</td>
+ <td>To love; yes; thank you</td>
+ </tr>
+ </table>
+
+ <h3>Your first sentences</h3>
+ <p style="font-size:0.875rem;color:#534AB7;margin:-0.5rem 0 0.75rem;">🔊 Tap any sentence to hear it spoken aloud.</p>
+ <div class="example-box">
+ <div class="molah speakable" onclick="speak('Ya ur Tom', this)" title="Tap to hear">Ya ur Tom.<span class="speak-icon">🔊</span></div>
+ <div class="pronunciation">(yah ur tom)</div>
+ <div class="translation">I am Tom.</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah speakable" onclick="speak('Waka, yo bama', this)" title="Tap to hear">Waka, yo bama?<span class="speak-icon">🔊</span></div>
+ <div class="pronunciation">(yoh bah-mah wah-kah)</div>
+ <div class="translation">What do you want?</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah speakable" onclick="speak('Ya kab Moe lah', this)" title="Tap to hear">Ya kab Molah.<span class="speak-icon">🔊</span></div>
+ <div class="pronunciation">(yah kahb moh-lah)</div>
+ <div class="translation">I understand Molah.</div>
+ </div>
+
+ <div class="exercise">
+ <h4>Practice: Create sentences</h4>
+ <div class="exercise-item">Say "I am [your name]" in Molah (Ya ur...)</div>
+ <div class="exercise-item">Say "You want" (Yo bama)</div>
+ <div class="exercise-item">Say "We go" (Mo bo)</div>
+ <div class="exercise-item">Say "I understand" (Ya kab)</div>
+ </div>
+
+ <div class="nav-buttons">
+ <button class="btn btn-secondary" onclick="nextLesson(1)">← Previous</button>
+ <button class="btn btn-secondary" onclick="skipQuiz(3, 4)">Skip quiz</button>
+ <button class="btn btn-primary" onclick="showQuiz(3)">Quiz: First words →</button>
+ </div>
+ </div>
+
+ <!-- Quiz 2 -->
+ <div class="lesson hidden" id="quiz2"></div>
+
+ <!-- Lesson 3: Word Order -->
+ <div class="lesson hidden" id="lesson4">
+ <h2>Lesson 4: Word order (S-V-O)</h2>
+ 
+ <p>Molah follows a fixed <strong>Subject-Verb-Object</strong> word order, just like English. This makes it easy to construct sentences.</p>
+
+ <h3>The pattern</h3>
+ <div style="background: #EEEDFE; padding: 1.5rem; border-radius: 8px; font-weight: 500; font-size: 1.25rem; color: #3C3489; text-align: center; margin: 1.5rem 0;">
+ Subject → Verb → Object
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Ya bama brim.</div>
+ <div class="pronunciation">(yah bah-mah brim)</div>
+ <div class="translation">I want drink. (Ya=subject, bama=verb, brim=object)</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Yo low ya.</div>
+ <div class="pronunciation">(yoh lohw yah)</div>
+ <div class="translation">You love me. (Yo=subject, low=verb, ya=object)</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Mo bo musyum.</div>
+ <div class="pronunciation">(moh boh mu-syum)</div>
+ <div class="translation">We go museum. (Mo=subject, bo=verb, musyum=object)</div>
+ </div>
+
+ <h3>Modifiers (adjectives)</h3>
+ <p>Adjectives go <strong>before</strong> nouns:</p>
+
+ <div class="example-box">
+ <div class="molah">Bik ham bo.</div>
+ <div class="pronunciation">(bik hahm boh)</div>
+ <div class="translation">Big person goes.</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Ya bama yuhm it-yuhm.</div>
+ <div class="pronunciation">(yah bah-mah yoom it-yoom)</div>
+ <div class="translation">I want good food.</div>
+ </div>
+
+ <div class="exercise">
+ <h4>Practice: Build sentences</h4>
+ <div class="exercise-item">Subject: Ya, Verb: ur, Object: yuhm → Ya ur yuhm (I am good)</div>
+ <div class="exercise-item">Subject: Yo, Verb: sys (see), Object: tamham (thing) → Yo sys tamham</div>
+ <div class="exercise-item">Add "bik" (big) before "tamham": Yo sys bik tamham (You see big thing)</div>
+ </div>
+
+ <div class="nav-buttons">
+ <button class="btn btn-secondary" onclick="nextLesson(3)">← Previous</button>
+ <button class="btn btn-secondary" onclick="skipQuiz(4, 5)">Skip quiz</button>
+ <button class="btn btn-primary" onclick="showQuiz(4)">Quiz: Word order →</button>
+ </div>
+ </div>
+
+ <!-- Quiz 3 -->
+ <div class="lesson hidden" id="quiz3"></div>
+
+ <!-- Lesson 4: Tenses -->
+ <div class="lesson hidden" id="lesson5">
+ <h2>Lesson 5: Past and future tenses</h2>
+ 
+ <p>Molah makes tenses incredibly simple: add <strong>-ko</strong> for past, add <strong>-tu</strong> for future. No irregular verbs, no exceptions!</p>
+
+ <h3>The tense system</h3>
+ <table class="vocab-table">
+ <tr>
+ <th>Tense</th>
+ <th>Marker</th>
+ <th>Example</th>
+ <th>Translation</th>
+ </tr>
+ <tr>
+ <td>Present</td>
+ <td>(none)</td>
+ <td><strong>Ya bo</strong></td>
+ <td>I go</td>
+ </tr>
+ <tr>
+ <td>Past</td>
+ <td>-ko</td>
+ <td><strong>Ya bo-ko</strong></td>
+ <td>I went</td>
+ </tr>
+ <tr>
+ <td>Future</td>
+ <td>-tu</td>
+ <td><strong>Ya bo-tu</strong></td>
+ <td>I will go</td>
+ </tr>
+ </table>
+
+ <h3>More examples</h3>
+ <div class="example-box">
+ <div class="molah">Ya it. / Ya it-ko. / Ya it-tu.</div>
+ <div class="pronunciation">(yah it / yah it-koh / yah it-too)</div>
+ <div class="translation">I eat. / I ate. / I will eat.</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Yo low ya. / Yo low-ko ya. / Yo low-tu ya.</div>
+ <div class="pronunciation">(yoh lohw yah)</div>
+ <div class="translation">You love me. / You loved me. / You will love me.</div>
+ </div>
+
+ <h3>Time words use the same pattern</h3>
+ <div class="example-box">
+ <div class="molah">Zora / Zora-ko / Zora-tu</div>
+ <div class="pronunciation">(zorah / zorah-koo / zorah-too)</div>
+ <div class="translation">Today / Yesterday / Tomorrow</div>
+ </div>
+
+ <div class="exercise">
+ <h4>Practice: Change tenses</h4>
+ <div class="exercise-item">Ya bama brim → Past: Ya bama-ko brim (I wanted drink)</div>
+ <div class="exercise-item">Yo sys tamham → Future: Yo sys-tu tamham (You will see thing)</div>
+ <div class="exercise-item">Mo bo beach → Past: Mo bo-ko beach (We went beach)</div>
+ </div>
+
+ <div class="nav-buttons">
+ <button class="btn btn-secondary" onclick="nextLesson(4)">← Previous</button>
+ <button class="btn btn-secondary" onclick="skipQuiz(5, 6)">Skip quiz</button>
+ <button class="btn btn-primary" onclick="showQuiz(5)">Quiz: Tenses →</button>
+ </div>
+ </div>
+
+ <!-- Quiz 4 -->
+ <div class="lesson hidden" id="quiz4"></div>
+
+ <!-- Lesson 5: Questions -->
+ <div class="lesson hidden" id="lesson6">
+ <h2>Lesson 6: Asking questions</h2>
+ 
+ <p>Questions in Molah use simple question words. You can also make any statement into a question just by using a rising tone!</p>
+
+ <h3>Question words</h3>
+ <table class="vocab-table">
+ <tr>
+ <th>Molah</th>
+ <th>Pronunciation</th>
+ <th>English</th>
+ </tr>
+ <tr>
+ <td><strong>Wu-wu</strong></td>
+ <td>woo-woo</td>
+ <td>Where</td>
+ </tr>
+ <tr>
+ <td><strong>Waka</strong></td>
+ <td>wah-kah</td>
+ <td>What, how, which</td>
+ </tr>
+ <tr>
+ <td><strong>To-to</strong></td>
+ <td>toh-toh</td>
+ <td>When</td>
+ </tr>
+ <tr>
+ <td><strong>Walh</strong></td>
+ <td>wahlh</td>
+ <td>How much (price/value)</td>
+ </tr>
+ </table>
+
+ <h3>Words carry their meaning — by design</h3>
+ <div class="note-box">
+ <h4>Wu, Wu-wu, and the logic of Molah words</h4>
+ <p>In Molah, words are designed to give you a conceptual clue about what they mean — even before you've learned them. Notice that <strong>Wu</strong> means "here / this" (something close, immediate), and <strong>Wu-wu</strong> means "where?" Doubling Wu turns a statement of closeness into a question about location — as if you're saying "here... here?" while looking around for something.</p>
+ <p style="margin-top:0.75rem;">The same logic runs through all the question words:</p>
+ </div>
+
+ <table class="vocab-table">
+ <tr>
+ <th>Question word</th>
+ <th>Root idea</th>
+ <th>How it works</th>
+ </tr>
+ <tr>
+ <td><strong>Wu-wu</strong> — Where?</td>
+ <td>Wu = here / this</td>
+ <td>Doubled: "here... here?" — searching for a place</td>
+ </tr>
+ <tr>
+ <td><strong>To-to</strong> — When?</td>
+ <td>To = a moment / point</td>
+ <td>Doubled: "now... now?" — searching for a time</td>
+ </tr>
+ <tr>
+ <td><strong>Waka</strong> — What / How / Which?</td>
+ <td>Wakka = walk / way</td>
+ <td>Which way? What path? — searching for direction or identity</td>
+ </tr>
+ <tr>
+ <td><strong>Walh</strong> — How much?</td>
+ <td>Wahl = value</td>
+ <td>What is its value? — directly rooted in the concept of worth</td>
+ </tr>
+ </table>
+
+ <div class="advantage-card" style="margin: 1rem 0 1.5rem;">
+ <h4>This is intentional</h4>
+ <p>Molah was designed so that a new speaker can often make an educated guess at meaning from the sound and shape of a word alone. Wu sounds close and immediate. Wu-wu sounds like a search. Waka sounds like movement. Walh sounds like weighing something. This is not an accident — it is the philosophy of the language.</p>
+ </div>
+
+ <h3>Question examples</h3>
+ <div class="example-box">
+ <div class="molah">Wu-wu, yo ur?</div>
+ <div class="pronunciation">(woo-woo, yoh ur)</div>
+ <div class="translation">Where are you from?</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah speakable" onclick="speak('Waka, yo bama', this)" title="Tap to hear">Waka, yo bama?<span class="speak-icon">🔊</span></div>
+ <div class="pronunciation">(yoh bah-mah wah-kah)</div>
+ <div class="translation">What do you want?</div>
+ </div>
+
+ <div class="note-box">
+ <h4>Word order in questions — the full rule</h4>
+ <p>The order is always: <strong>Question word → Time word → Subject → Verb → Object</strong></p>
+ <p style="margin-top:0.5rem;"><strong>Comma rule:</strong> Always place a comma after the opening word(s). After a question word alone: <em>Waka, yo bama?</em> After a time word alone: <em>Zora, mo tafl.</em> After both — comma goes after the time word: <em>Waka zym, tram bo?</em></p>
+ <p style="margin-top:0.5rem;"><strong>Rule 1:</strong> Question words (Wu-wu, Waka, To-to, Walh) go <strong>first</strong>. <em>Waka yo bama?</em> = What do you want? Not <em>Yo bama waka?</em></p>
+ <p style="margin-top:0.5rem;"><strong>Rule 2:</strong> If both a question word AND a time word are present, the question word comes first and the time word comes <strong>immediately after</strong> — then S-V-O. <em>Waka zym, tram bo?</em> = What time does the train go? Not <em>Zym, tram bo waka?</em></p>
+ <p style="margin-top:0.5rem;"><strong>Rule 3:</strong> If there is only a time word (no question word), it leads alone. <em>Zora, mo tafl-tu Molah.</em> = Today, we will speak Molah.</p>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Waka zym, tram bo?</div>
+ <div class="pronunciation">(wah-kah zeem, trahm boh)</div>
+ <div class="translation">What time does the train go?</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Walh?</div>
+ <div class="pronunciation">(wahlh)</div>
+ <div class="translation">How much?</div>
+ </div>
+
+ <div class="exercise">
+ <h4>Practice: Ask questions</h4>
+ <div class="exercise-item">Where is toilet? → Wu-wu, Ikrit-wif ur?</div>
+ <div class="exercise-item">When will you go? → To-to, yo bo-tu?</div>
+ <div class="exercise-item">What do I want? → Waka, ya bama?</div>
+ </div>
+
+ <div class="nav-buttons">
+ <button class="btn btn-secondary" onclick="nextLesson(5)">← Previous</button>
+ <button class="btn btn-secondary" onclick="skipQuiz(6, 7)">Skip quiz</button>
+ <button class="btn btn-primary" onclick="showQuiz(6)">Quiz: Questions →</button>
+ </div>
+ </div>
+
+ <!-- Quiz 5 -->
+ <div class="lesson hidden" id="quiz5"></div>
+
+ <!-- Lesson 6: Lah ending and intensification -->
+ <div class="lesson hidden" id="lesson7">
+ <h2>Lesson 7: Sentence endings and intensification</h2>
+ 
+ <h3>The "lah" ending</h3>
+ <p>Adding <strong>"lah"</strong> at the end of a sentence indicates what was said should be understood as happy, cute, or cheeky. It adds a friendly, positive tone.</p>
+
+ <div class="example-box">
+ <div class="molah">Ya bo beach lah!</div>
+ <div class="pronunciation">(yah boh beach lah)</div>
+ <div class="translation">I go to beach (happily/excitedly)!</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Yo ur yuhm ham lah.</div>
+ <div class="pronunciation">(yoh ur yoom hahm lah)</div>
+ <div class="translation">You are good person (said warmly).</div>
+ </div>
+
+ <h3>The "bah" ending</h3>
+ <p>Adding <strong>"bah"</strong> at the end indicates something is not funny, strange, or bad.</p>
+
+ <div class="example-box">
+ <div class="molah">Wythar ur bah.</div>
+ <div class="pronunciation">(wy-thar ur bah)</div>
+ <div class="translation">Weather is bad.</div>
+ </div>
+
+ <h3>Intensification through repetition</h3>
+ <p>Repeating a word shows <strong>intensity</strong>, age, or depth. This is a key feature of Molah!</p>
+
+ <table class="vocab-table">
+ <tr>
+ <th>Single</th>
+ <th>Repeated (Intensified)</th>
+ <th>Meaning</th>
+ </tr>
+ <tr>
+ <td><strong>low</strong></td>
+ <td><strong>low-low</strong></td>
+ <td>love → really love / very much</td>
+ </tr>
+ <tr>
+ <td><strong>lah</strong></td>
+ <td><strong>lah-lah</strong></td>
+ <td>happy → very happy/funny</td>
+ </tr>
+ <tr>
+ <td><strong>bah</strong></td>
+ <td><strong>bah-bah</strong></td>
+ <td>bad → really bad</td>
+ </tr>
+ <tr>
+ <td><strong>woom</strong></td>
+ <td><strong>woom-woom</strong></td>
+ <td>fast → really fast</td>
+ </tr>
+ <tr>
+ <td><strong>uhhh</strong></td>
+ <td><strong>uhhh-uhhh</strong></td>
+ <td>slow → very slow</td>
+ </tr>
+ <tr>
+ <td><strong>kru</strong></td>
+ <td><strong>kru-kru</strong></td>
+ <td>cry → weep (deep crying)</td>
+ </tr>
+ <tr>
+ <td><strong>mor</strong></td>
+ <td><strong>mor-mor</strong></td>
+ <td>mother → grandmother</td>
+ </tr>
+ <tr>
+ <td><strong>fah</strong></td>
+ <td><strong>fah-fah</strong></td>
+ <td>father → grandfather</td>
+ </tr>
+ </table>
+
+ <h3>Examples in sentences</h3>
+ <div class="example-box">
+ <div class="molah">Ya low-low yo!</div>
+ <div class="pronunciation">(yah lohw-lohw yoh)</div>
+ <div class="translation">I really love you!</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Ham ram woom-woom.</div>
+ <div class="pronunciation">(hahm rahm woom-woom)</div>
+ <div class="translation">He/She runs really fast.</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Ya kal-tu mor-mor zora-tu.</div>
+ <div class="pronunciation">(yah kahl-too mor-mor zorah-too)</div>
+ <div class="translation">I will call grandmother tomorrow.</div>
+ </div>
+
+ <div class="exercise">
+ <h4>Practice: Use intensification</h4>
+ <div class="exercise-item">"I am very happy" → Ya ur hammy-hammy</div>
+ <div class="exercise-item">"The food is really good" → It-yuhm ur yuhm-yuhm</div>
+ <div class="exercise-item">"She walks very slowly" → Ham wakka uhhh-uhhh</div>
+ </div>
+
+ <div class="nav-buttons">
+ <button class="btn btn-secondary" onclick="nextLesson(6)">← Previous</button>
+ <button class="btn btn-secondary" onclick="skipQuiz(7, 8)">Skip quiz</button>
+ <button class="btn btn-primary" onclick="showQuiz(7)">Quiz: Endings & intensity →</button>
+ </div>
+ </div>
+
+ <!-- Quiz 6 -->
+ <div class="lesson hidden" id="quiz6"></div>
+
+ <!-- Lesson 7: Real Conversations -->
+ <div class="lesson hidden" id="lesson8">
+ <h2>Lesson 8: Real conversations</h2>
+ 
+ <p>Now let's put everything together with practical dialogues you might actually use!</p>
+
+ <h3>Dialogue 1: At a shop</h3>
+ <div class="dialogue">
+ <p><span class="speaker">You:</span> Yelb! Yo kabah fish?<br>
+ <span class="translation">(Help! Do you know fish?)</span></p>
+
+ <p><span class="speaker">Shopkeeper:</span> Low! Mo yabur fish wu.<br>
+ <span class="translation">(Yes! We have fish here. (yabur = have))</span></p>
+
+ <p><span class="speaker">You:</span> Yuhm! Ya bama fish. Walh?<br>
+ <span class="translation">(Good! I want fish. How much?)</span></p>
+
+ <p><span class="speaker">Shopkeeper:</span> Fish walh Mr-K-A.<br>
+ <span class="translation">(Fish costs 50 — Mr-K-A)</span></p>
+
+ <p><span class="speaker">You:</span> Sit? Bah! Ya dahm Mr-F-A.<br>
+ <span class="translation">(50? Bad! I give 30 — Mr-F-A)</span></p>
+
+ <p><span class="speaker">Shopkeeper:</span> Mr-F-A? Ill yuhm. Ya bru Mr-H-A.<br>
+ <span class="translation">(30? Not good. I need 40 — Mr-H-A)</span></p>
+
+ <p><span class="speaker">You:</span> Low! Ya dahm Mr-H-A lah!<br>
+ <span class="translation">(Yes! I give 40 — Mr-H-A — happily!)</span></p>
+ </div>
+
+ <h3>Dialogue 2: Asking directions</h3>
+ <div class="dialogue">
+ <p><span class="speaker">You:</span> Yelb! Wu-wu, musyum ur?<br>
+ <span class="translation">(Excuse me! Where is the museum? — time/place word first)</span></p>
+
+ <p><span class="speaker">Local:</span> Yo bo strat, lef waka bik stor.<br>
+ <span class="translation">(You go straight, left at big store.)</span></p>
+
+ <p><span class="speaker">You:</span> Low! Yo ur yuhm ham. Ya ur hammy sys Molah tafl-ham!<br>
+ <span class="translation">(Thanks! You are good person. I am happy to see Molah speaker!)</span></p>
+
+ <p><span class="speaker">Local:</span> Ya itah! Mo ur Molah tafl-ham lah-lah!<br>
+ <span class="translation">(Me too! We are Molah speakers (very happily)!)</span></p>
+ </div>
+
+ <div class="exercise">
+ <h4>Practice: Create your own dialogue</h4>
+ <div class="exercise-item">You're at a restaurant asking if they have good food</div>
+ <div class="exercise-item">Ask what time they open</div>
+ <div class="exercise-item">Say thank you and that you will come tomorrow</div>
+ </div>
+
+ <div class="nav-buttons">
+ <button class="btn btn-secondary" onclick="nextLesson(7)">← Previous</button>
+ <button class="btn btn-secondary" onclick="skipQuiz(8, 9)">Skip quiz</button>
+ <button class="btn btn-primary" onclick="showQuiz(8)">Quiz: Conversations →</button>
+ </div>
+ </div>
+
+ <!-- Quiz 7 -->
+ <div class="lesson hidden" id="quiz7"></div>
+
+ <!-- Lesson 8: Complete Verb List -->
+ <div class="lesson hidden" id="lesson9">
+ <h2>Lesson 9: The 80 core words of Molah</h2>
+ 
+ <div class="note-box">
+ <h4>Why only 80 core words?</h4>
+ <p>Molah's 80 core words are carefully chosen to cover all essential daily communication. <strong>Do not add new verbs!</strong> Adding vocabulary defeats Molah's purpose as a lingua franca - it only works if everyone uses the same limited vocabulary. If you need to express something not covered, combine existing verbs or use local words for specific items.</p>
+ </div>
+
+ <h3>Complete verb reference</h3>
+ <p style="margin-bottom: 1.5rem; color: #5F5E5A;">Verbs are grouped by shared roots. Notice how Molah builds new meanings by combining familiar parts — once you know a root, you already half-know its compounds.</p>
+
+ <!-- Bo: movement -->
+ <div class="advantage-card" style="margin-bottom: 0.5rem;">
+ <h4>Movement — root: <em>Bo</em> (go)</h4>
+ <p><strong>Bo</strong> is the core of all movement. Attach <em>Wif</em> (place) and <em>A</em> (back) to get "go-place-back" = return. Attach <em>Woom</em> (fast) to get <em>Bo-Woom</em> = hurry (go-fast). <strong>Goot</strong> (finished/done/complete) stands alone as a completion marker.</p>
+ </div>
+ <table class="vocab-table" style="margin-bottom: 1.5rem;">
+ <tr><th>Molah</th><th>English</th></tr>
+ <tr><td><strong>Bo</strong></td><td>Go</td></tr>
+ <tr><td><strong>Bo-Wif-A</strong></td><td>Return (go-place-back)</td></tr>
+ <tr><td><strong>Bo-Woom</strong></td><td>Hurry (go-fast)</td></tr>
+ <tr><td><strong>Woom</strong></td><td>Fast / Quick</td></tr>
+ <tr><td><strong>Bo-Woom</strong></td><td>Hurry (go-fast)</td></tr>
+ <tr><td><strong>Tiv</strong></td><td>Travel</td></tr>
+ <tr><td><strong>Korby</strong></td><td>Drive / Car / Bus</td></tr>
+ <tr><td><strong>Wakka</strong></td><td>Walk / Way</td></tr>
+ <tr><td><strong>BazI</strong></td><td>Run</td></tr>
+ <tr><td><strong>Lift</strong></td><td>Lift / Go Up</td></tr>
+ <tr><td><strong>Woo-hoo</strong></td><td>Carry</td></tr>
+ </table>
+
+ <!-- Wif: place -->
+ <div class="advantage-card" style="margin-bottom: 0.5rem;">
+ <h4>Place — root: <em>Wif</em> (place/put)</h4>
+ <p><strong>Wif</strong> means to place something. Combine with <em>Smakkr</em> (make) to get "make-place" = build. Combine with <em>Bo</em> and <em>A</em> to get return (see above).</p>
+ </div>
+ <table class="vocab-table" style="margin-bottom: 1.5rem;">
+ <tr><th>Molah</th><th>English</th></tr>
+ <tr><td><strong>Wif</strong></td><td>Place / Put</td></tr>
+ <tr><td><strong>Iti</strong></td><td>Stay</td></tr>
+ <tr><td><strong>Raz</strong></td><td>Lay / Lie</td></tr>
+ <tr><td><strong>Takkat</strong></td><td>Hang</td></tr>
+ <tr><td><strong>Makarat</strong></td><td>Tie / Package / Unify</td></tr>
+ <tr><td><strong>Baraz</strong></td><td>Bury / Hide</td></tr>
+ </table>
+
+ <!-- Smakkr: making -->
+ <div class="advantage-card" style="margin-bottom: 0.5rem;">
+ <h4>Making — root: <em>Smakkr</em> (make)</h4>
+ <p><strong>Smakkr</strong> is the general verb for making. Specify <em>what</em> you're making by adding a noun: <em>Smakkr-It</em> = make-food = bake/cook. <em>Smakkr-Wif</em> = make-place = build.</p>
+ </div>
+ <table class="vocab-table" style="margin-bottom: 1.5rem;">
+ <tr><th>Molah</th><th>English</th></tr>
+ <tr><td><strong>Smakkr</strong></td><td>Make</td></tr>
+ <tr><td><strong>Smakkr-It</strong></td><td>Bake (make-food)</td></tr>
+ <tr><td><strong>Smakkr-Wif</strong></td><td>Build (make-place)</td></tr>
+ <tr><td><strong>Kok</strong></td><td>Cook</td></tr>
+ <tr><td><strong>Kubok</strong></td><td>Cut</td></tr>
+ <tr><td><strong>Akkr</strong></td><td>Break</td></tr>
+ </table>
+
+ <!-- Tah: speech -->
+ <div class="advantage-card" style="margin-bottom: 0.5rem;">
+ <h4>Speech — root: <em>Tah</em> (speak/say)</h4>
+ <p><strong>Tah</strong> underlies all communication verbs. <em>Tah-lah</em> = say-happy = ask (a friendly request). <em>Tah-low</em> = say-love = answer (a warm response). <em>Tah-bah</em> = say-bad = decline (a negative reply). <em>Skrif</em> is the written form of communication — to write or mark — essential for trade documents and signs.</p>
+ </div>
+ <table class="vocab-table" style="margin-bottom: 1.5rem;">
+ <tr><th>Molah</th><th>English</th></tr>
+ <tr><td><strong>Tafl</strong></td><td>Talk / Speak</td></tr>
+ <tr><td><strong>Tah-lah</strong></td><td>Ask (say-happy)</td></tr>
+ <tr><td><strong>Tah-low</strong></td><td>Answer (say-love)</td></tr>
+ <tr><td><strong>Tah-bah</strong></td><td>Decline (say-bad)</td></tr>
+ <tr><td><strong>Tahaza</strong></td><td>Breathe / Air</td></tr>
+ <tr><td><strong>Kaza</strong></td><td>Shout</td></tr>
+ <tr><td><strong>Rimr</strong></td><td>Call</td></tr>
+ <tr><td><strong>Skrif</strong></td><td>Write / Mark</td></tr>
+ </table>
+
+ <!-- Dahm: exchange -->
+ <div class="advantage-card" style="margin-bottom: 0.5rem;">
+ <h4>Exchange — root: <em>Dahm</em> (give)</h4>
+ <p><strong>Dahm</strong> is the act of giving. <em>Dahma</em> extends this to buying (you give money). <em>Dahka</em> is borrowing (a temporary give). <em>Dahm-Faka</em> = "give-forbidden" = steal — the dark mirror of exchange, where no giving happens at all.</p>
+ </div>
+ <table class="vocab-table" style="margin-bottom: 1.5rem;">
+ <tr><th>Molah</th><th>English</th></tr>
+ <tr><td><strong>Dahm</strong></td><td>Give</td></tr>
+ <tr><td><strong>Dahma</strong></td><td>Buy (give-for)</td></tr>
+ <tr><td><strong>Dahka</strong></td><td>Borrow (give-temp)</td></tr>
+ <tr><td><strong>Dahm-Faka</strong></td><td>Steal (give-forbidden)</td></tr>
+ </table>
+
+ <!-- Kab/Kabah: mind -->
+ <div class="advantage-card" style="margin-bottom: 0.5rem;">
+ <h4>Mind — root: <em>Kab</em> (understand)</h4>
+ <p><strong>Kab</strong> is active understanding — processing something in the moment. <em>Kabah</em> extends this to stored knowledge — things you already understand and hold in mind. <em>Sys</em> (see) and <em>Sysinda</em> (see-within = realize) bridge perception and understanding.</p>
+ </div>
+ <table class="vocab-table" style="margin-bottom: 1.5rem;">
+ <tr><th>Molah</th><th>English</th></tr>
+ <tr><td><strong>Kab</strong></td><td>Understand</td></tr>
+ <tr><td><strong>Kabah</strong></td><td>Know</td></tr>
+ <tr><td><strong>Sys</strong></td><td>See</td></tr>
+ <tr><td><strong>Sysinda</strong></td><td>Realize (see-within)</td></tr>
+                <tr><td><strong>Mira</strong></td><td>Remember / Recall</td></tr>
+ <tr><td><strong>Tamala</strong></td><td>Feel</td></tr>
+ <tr><td><strong>Tamoho</strong></td><td>Dream</td></tr>
+ </table>
+
+ <!-- Low/Zoot: emotion -->
+ <div class="advantage-card" style="margin-bottom: 0.5rem;">
+ <h4>Emotion — root: <em>Low</em> (love) and <em>Zoot</em> (hate)</h4>
+ <p><strong>Low</strong> and <strong>Zoot</strong> are emotional opposites. <em>Low-mah-tah</em> extends love into action: "love-make-speak" = to care (to actively show love). <em>Kru</em> (cry) belongs here as the physical expression of deep feeling.</p>
+ </div>
+ <table class="vocab-table" style="margin-bottom: 1.5rem;">
+ <tr><th>Molah</th><th>English</th></tr>
+ <tr><td><strong>Low</strong></td><td>Love / Yes / Thank you</td></tr>
+ <tr><td><strong>Low-mah-tah</strong></td><td>Care (love-make-speak)</td></tr>
+ <tr><td><strong>Zoot</strong></td><td>Hate</td></tr>
+ <tr><td><strong>Kru</strong></td><td>Cry</td></tr>
+ <tr><td><strong>Shhh</strong></td><td>Sigh</td></tr>
+ </table>
+
+ <!-- Ur/Boki: being -->
+ <div class="advantage-card" style="margin-bottom: 0.5rem;">
+ <h4>Being — root: <em>Ur</em> (be) and <em>Boki</em> (grow)</h4>
+ <p><strong>Ur</strong> is static existence. <strong>Boki</strong> is active growth. Together, <em>Ur-Boki</em> = "be-grow" = to live — because life is the combination of existing and growing.</p>
+ </div>
+ <table class="vocab-table" style="margin-bottom: 1.5rem;">
+ <tr><th>Molah</th><th>English</th></tr>
+ <tr><td><strong>Ur</strong></td><td>Be (am / is / are)</td></tr>
+ <tr><td><strong>Boki</strong></td><td>Grow</td></tr>
+ <tr><td><strong>Ur-Boki</strong></td><td>Live (be-grow)</td></tr>
+ <tr><td><strong>Asuho</strong></td><td>Sleep</td></tr>
+ </table>
+
+ <!-- It: body/food -->
+ <div class="advantage-card" style="margin-bottom: 0.5rem;">
+ <h4>Body & food — root: <em>It</em> (eat)</h4>
+ <p><strong>It</strong> is the core food verb. <em>Brim</em> (drink) and <em>Ikrit</em> (excrete) complete the body's intake/output cycle. <em>Raz-itah</em> = "raz-itah" = sit. <em>Hakka</em> = steam/hot/tea. <em>Hakka-lah</em> = coffee (happy-steam). <em>Hakka-brim</em> = beer (steam-drink). <em>Hakka-Faka</em> = liquor (forbidden-steam). <em>Klar</em> (clean/wash) and <em>Tami</em> (hurt/sick) complete the essential body-care vocabulary.</p>
+ </div>
+ <table class="vocab-table" style="margin-bottom: 1.5rem;">
+ <tr><th>Molah</th><th>English</th></tr>
+ <tr><td><strong>It</strong></td><td>Eat</td></tr>
+ <tr><td><strong>Brim</strong></td><td>Drink</td></tr>
+ <tr><td><strong>Ikrit</strong></td><td>Excrete</td></tr>
+ <tr><td><strong>Raz-itah</strong></td><td>Sit</td></tr>
+ <tr><td><strong>Hakka</strong></td><td>Steam / Hot / Tea</td></tr>
+ <tr><td><strong>Hakka-lah</strong></td><td>Coffee (happy-steam)</td></tr>
+ <tr><td><strong>Hakka-brim</strong></td><td>Beer (steam-drink)</td></tr>
+ <tr><td><strong>Hakka-Faka</strong></td><td>Liquor (forbidden-steam)</td></tr>
+ <tr><td><strong>Klar</strong></td><td>Clean / Wash</td></tr>
+ <tr><td><strong>Tami</strong></td><td>Hurt / Be sick</td></tr>
+ </table>
+
+ <!-- Ya- body compounds -->
+ <div class="advantage-card" style="margin-bottom: 0.5rem;">
+ <h4>Self & body — root: <em>Ya</em> (I / me)</h4>
+ <p><strong>Ya</strong> (I/me) appears in verbs where the self is physically involved. <em>Yabur</em> = "I-hold" = hold (your hands on something). <em>Ya-daht</em> = "I-lack" = need (the self is missing something). <em>Yabur</em> = "I-you-speak-hold" = embrace (holding someone close enough to speak).</p>
+ </div>
+ <table class="vocab-table" style="margin-bottom: 1.5rem;">
+ <tr><th>Molah</th><th>English</th></tr>
+ <tr><td><strong>Yabur</strong></td><td>Hold (I-hold)</td></tr>
+ <tr><td><strong>Ya-daht</strong></td><td>Need (I-lack)</td></tr>
+ <tr><td><strong>Yabur</strong></td><td>Hold / Have / Embrace (I-you-speak-hold)</td></tr>
+ </table>
+
+ <!-- Uhhh: slow/stop -->
+ <div class="advantage-card" style="margin-bottom: 0.5rem;">
+ <h4>Stopping & slowing — root: <em>Uhhh</em> (slow)</h4>
+ <p><strong>Uhhh</strong> evokes the sound of reluctant slowness. <em>Zuh/Stob</em> is a full stop. <em>Stob-Uhhl</em> = "stop-slow" = wait (a slow, patient stop). <em>Uhhh-tombo</em> = "slow-long" = to long for something (a slow, dragging feeling).</p>
+ </div>
+ <table class="vocab-table" style="margin-bottom: 1.5rem;">
+ <tr><th>Molah</th><th>English</th></tr>
+ <tr><td><strong>Uhhh</strong></td><td>Slow</td></tr>
+ <tr><td><strong>Stob</strong></td><td>Stop</td></tr>
+ <tr><td><strong>Stob-Uhhl</strong></td><td>Wait (stop-slow)</td></tr>
+ <tr><td><strong>Uhhh-tombo</strong></td><td>Long / Pine for (slow-long)</td></tr>
+ </table>
+
+ <!-- Abin/Klos -->
+ <div class="advantage-card" style="margin-bottom: 0.5rem;">
+ <h4>Open & close — opposites: <em>Abin</em> / <em>Klos</em></h4>
+ <p><strong>Abin</strong> and <strong>Klos</strong> are a natural pair — the two directions of any door, container, or conversation.</p>
+ </div>
+ <table class="vocab-table" style="margin-bottom: 1.5rem;">
+ <tr><th>Molah</th><th>English</th></tr>
+ <tr><td><strong>Abin</strong></td><td>Open</td></tr>
+ <tr><td><strong>Klos</strong></td><td>Close</td></tr>
+ </table>
+
+ <!-- Faka: forbidden -->
+ <div class="advantage-card" style="margin-bottom: 0.5rem;">
+ <h4>Forbidden — root: <em>Faka</em> (forbidden / not allowed)</h4>
+ <p><strong>Faka</strong> is the moral qualifier for prohibition — stronger than <em>Bah</em> (bad/unpleasant) and distinct from it. Where Bah describes something unwanted, Faka describes something that must not be done. This gives Molah a clean three-tier ethical vocabulary: <em>Low</em> (good), <em>Bah</em> (bad), <em>Faka</em> (forbidden). Any verb compounded with Faka means doing that action in a forbidden way — e.g. Bo-Faka (trespass), Tafl-Faka (lie/perjure), Dahma-Faka (smuggle), Sys-Faka (spy) — so only the root needs to be learned.</p>
+ </div>
+ <table class="vocab-table" style="margin-bottom: 1.5rem;">
+ <tr><th>Molah</th><th>English</th></tr>
+ <tr><td><strong>Faka</strong></td><td>Forbidden / Not allowed</td></tr>
+ </table>
+
+ <!-- Rows/Maki: finding and fixing -->
+ <div class="advantage-card" style="margin-bottom: 0.5rem;">
+ <h4>Finding & fixing — <em>Rows</em> (search) and <em>Maki</em> (repair)</h4>
+ <p><strong>Rows</strong> captures the act of searching through things — moving through possibilities to find something. <strong>Maki</strong> is distinct from <em>Smakkr</em> (make from nothing) — it means to restore something broken to its working state. <em>Rows-Maki</em> = "search-fix" = troubleshoot. These two fill critical gaps for any traveler: finding a place, finding help, fixing a vehicle, fixing a misunderstanding.</p>
+ </div>
+ <table class="vocab-table" style="margin-bottom: 1.5rem;">
+ <tr><th>Molah</th><th>English</th></tr>
+ <tr><td><strong>Rows</strong></td><td>Search / Find / Look for</td></tr>
+ <tr><td><strong>Maki</strong></td><td>Fix / Repair</td></tr>
+ </table>
+
+ <!-- Goot note -->
+ <div class="note-box" style="margin-bottom:1rem;">
+ <h4>Goot — finished / done / complete</h4>
+ <p><strong>Goot</strong> is used whenever something has reached completion. <em>Ya goot</em> = I am done. <em>It-yuhm goot</em> = The food is finished. <em>Goot lah!</em> = All done (happily)! It can follow any action to signal its completion.</p>
+ </div>
+
+ <!-- Remaining -->
+ <!-- Zee- transition words -->
+ <div class="advantage-card" style="margin-bottom: 0.5rem;">
+ <h4>Transition words — the Zee- prefix</h4>
+ <p>Zee- marks connectors and links. <em>Zee-kahb</em> = because/for/reason. <em>Zee-bobo</em> = after/afterwards (bobo = going-going = continued motion forward).</p>
+ </div>
+ <table class="vocab-table" style="margin-bottom: 1.5rem;">
+ <tr><th>Molah</th><th>English</th></tr>
+ <tr><td><strong>Zee-kahb</strong></td><td>Because / For / For the reason that</td></tr>
+ <tr><td><strong>Zee-bobo</strong></td><td>After / Afterwards</td></tr>
+ </table>
+
+ <!-- Place words -->
+ <div class="advantage-card" style="margin-bottom: 0.5rem;">
+ <h4>Place words</h4>
+ <p><em>Sysi-wif</em> = sysi-place = movie theater. <em>Ur-Hamma-Wif</em> = be-care-place = hospital.</p>
+ </div>
+ <table class="vocab-table" style="margin-bottom: 1.5rem;">
+ <tr><th>Molah</th><th>English</th></tr>
+ <tr><td><strong>Sysi-wif</strong></td><td>Movie theater (sysi-place)</td></tr>
+ <tr><td><strong>Ur-Hamma-Wif</strong></td><td>Hospital (be-care-place)</td></tr>
+ </table>
+
+ <div class="advantage-card" style="margin-bottom: 0.5rem;">
+ <h4>Standalone verbs</h4>
+ <p>These verbs stand alone and are not built from other Molah roots. Each covers a concept that couldn't be efficiently compounded.</p>
+ </div>
+ <table class="vocab-table" style="margin-bottom: 1.5rem;">
+ <tr><th>Molah</th><th>English</th></tr>
+ <tr><td><strong>Goot</strong></td><td>Finished / Done / Complete</td></tr>
+ <tr><td><strong>Bama</strong></td><td>Want</td></tr>
+ <tr><td><strong>Yilb</strong></td><td>Help</td></tr>
+ <tr><td><strong>Yo-mo-yo</strong></td><td>Meet (you-we-you)</td></tr>
+ <tr><td><strong>Sily</strong></td><td>Play</td></tr>
+ <tr><td><strong>Illi</strong></td><td>Lose</td></tr>
+ <tr><td><strong>Mo-fat</strong></td><td>Try</td></tr>
+ <tr><td><strong>Wahl</strong></td><td>Value</td></tr>
+ <tr><td><strong>Kool</strong></td><td>Smooth</td></tr>
+ <tr><td><strong>Billoozuh</strong></td><td>Kill</td></tr>
+ <tr><td><strong>Li-Bah</strong></td><td>Deceive</td></tr>
+ <tr><td><strong>Bah-bin</strong></td><td>Pass</td></tr>
+ <tr><td><strong>Bah-t</strong></td><td>No</td></tr>
+ <tr><td><strong>Ham-Zuh</strong></td><td>New — slang: Cool! / Awesome!</td></tr>
+ <tr><td><strong>Wuz-Zuh</strong></td><td>Old — slang: Bummer! / What a shame!</td></tr>
+ <tr><td><strong>Akkr-Wif</strong></td><td>Toilet / Bathroom (break-place)</td></tr>
+ <tr><td><strong>Rimba</strong></td><td>Rainstorm / Crazy (wild state)</td></tr>
+ <tr><td><strong>Klara</strong></td><td>Clear sky / Sober (clear state)</td></tr>
+ </table>
+
+ <div class="note-box">
+ <h4>Rimba and Klara — double usage words</h4>
+ <p><strong>Rimba</strong> means both rainstorm (the weather) and crazy (a wild human state). <strong>Klara</strong> means both clear sky and sober/clear-minded — sharing a root feel with <em>Klar</em> (clean/wash) already in the language. Context always makes the meaning clear.</p>
+ <p style="margin-top:0.5rem;"><em>Wythar ur rimba!</em> = The weather is stormy! / That's crazy! &nbsp;•&nbsp; <em>Ya ur klara.</em> = I am sober. / The sky is clear. &nbsp;•&nbsp; <em>Rimba-rimba!</em> = Total chaos! &nbsp;•&nbsp; <em>Ham ill-ur klara.</em> = He is not sober.</p>
+ </div>
+
+ <div class="note-box">
+ <h4>Lafa — laugh and funny</h4>
+ <p><strong>Lafa</strong> means both to laugh and funny/amusing. <em>Ya lafa</em> = I laugh. <em>Ham ur lafa</em> = They are funny. The doubling and lah ending work naturally: <em>Lafa-lafa!</em> = Really hilarious! <em>Lafa-lah!</em> = So funny (warmly)! <em>Wu ur lafa-lafa lah!</em> = This is absolutely hilarious!</p>
+ </div>
+
+ <div class="note-box">
+ <h4>Kabah-Kah and Faka-Fak — describing the ultimate and the terrible</h4>
+ <p><strong>Kabah-Kah</strong> (the ultimate knowing) describes anything supremely good, wise, fortunate, or beautiful — a person, an outcome, a piece of luck, an animal, a moment. <strong>Faka-Fak</strong> (the utterly forbidden) describes anything truly evil, terrible, or wretched. These are descriptive words, not theological ones — Molah carries no religious affiliation.</p>
+ <p style="margin-top:0.5rem;"><em>Wythar ur kabah-kah zora!</em> = The weather is glorious today! &nbsp;•&nbsp; <em>Ham ur kabah-kah lah!</em> = They are an incredibly wise/wonderful person! &nbsp;•&nbsp; <em>Wu ur faka-fak bah.</em> = This is a truly terrible situation. &nbsp;•&nbsp; <em>Faka-fak wythar!</em> = What awful weather!</p>
+ </div>
+
+ <div class="note-box">
+ <h4>Ham-Zuh and Wuz-Zuh — slang included</h4>
+ <p><strong>Ham-Zuh</strong> means new, but in casual speech it doubles as slang for "Cool!" or "Awesome!" — something exciting and fresh. <strong>Wuz-Zuh</strong> means old, but in casual speech it expresses disappointment — "Bummer!" or a mild expletive when something goes wrong. Molah's slang lives inside its vocabulary: no extra words needed, just a shift of tone.</p>
+ <p style="margin-top:0.5rem;">Examples: <em>Ham-Zuh lah!</em> = That's so cool! &nbsp;•&nbsp; <em>Wuz-Zuh bah!</em> = What a bummer! &nbsp;•&nbsp; <em>Sysi-krul korby ur ham-zuh.</em> = The blue car is new.</p>
+ </div>
+
+ <!-- Hospital & travel words -->
+ <div class="advantage-card" style="margin-bottom: 0.5rem;">
+ <h4>Hospital essentials</h4>
+ <p>These three words are critical for medical situations. <em>Ur-Hama</em> = doctor. <em>Ur-Hamma-Wif</em> = hospital (be-care-place). <em>Ur-Amah-Ta</em> = "be-help-give" = medicine. <em>Barra-koosh</em> = allergic (standalone — no compound logic, just a dedicated word for a vital concept).</p>
+ </div>
+ <table class="vocab-table" style="margin-bottom: 1.5rem;">
+ <tr><th>Molah</th><th>English</th></tr>
+ <tr><td><strong>Ur-Hama</strong></td><td>Doctor</td></tr>
+ <tr><td><strong>Ur-Hamma-Wif</strong></td><td>Hospital (be-care-place)</td></tr>
+ <tr><td><strong>Ur-Amah-Ta</strong></td><td>Medicine (be-help-give)</td></tr>
+ <tr><td><strong>Barra-koosh</strong></td><td>Allergic</td></tr>
+ <tr><td><strong>Tami</strong></td><td>Hurt / Be sick</td></tr>
+ </table>
+
+ <div class="advantage-card" style="margin-bottom: 0.5rem;">
+ <h4>Airport & travel essentials</h4>
+ <p><em>Tiva-Tak</em> = travel-card = ticket (from Tiv = travel). <em>Tiva-Wif</em> = travel-place = gate or departure point.</p>
+ </div>
+ <table class="vocab-table" style="margin-bottom: 1.5rem;">
+ <tr><th>Molah</th><th>English</th></tr>
+ <tr><td><strong>Tiva-Tak</strong></td><td>Ticket (travel-card)</td></tr>
+ <tr><td><strong>Tiva-Wif</strong></td><td>Gate / Departure point (travel-place)</td></tr>
+ </table>
+
+ <div class="nav-buttons">
+ <button class="btn btn-secondary" onclick="nextLesson(8)">← Previous</button>
+ <button class="btn btn-secondary" onclick="skipQuiz(9, 10)">Skip quiz</button>
+ <button class="btn btn-primary" onclick="showQuiz(9)">Quiz: Verb list →</button>
+ </div>
+ </div>
+
+ <!-- Quiz 8 -->
+ <div class="lesson hidden" id="quiz8"></div>
+
+
+ <!-- Lesson 10: Colors -->
+ <div class="lesson hidden" id="lesson10">
+ <h2>Lesson 10: Colors in Molah</h2>
+
+ <p>Colors in Molah are built from the verb <strong>Sys</strong> (to see). Every color is literally "a way of seeing" — which reflects the idea that color is about perception. There are five primary color words. All other colors are made by combining two of them.</p>
+
+ <h3>The five primary colors</h3>
+ <table class="vocab-table">
+ <tr>
+ <th>Molah</th>
+ <th>Pronunciation</th>
+ <th>Color</th>
+ </tr>
+ <tr>
+ <td><strong>Sysi-ala</strong></td>
+ <td>sis-ee-ah-lah</td>
+ <td>White</td>
+ </tr>
+ <tr>
+ <td><strong>Sysi-ootl</strong></td>
+ <td>sis-ee-ootl</td>
+ <td>Black</td>
+ </tr>
+ <tr>
+ <td><strong>Sysi-mahl</strong></td>
+ <td>sis-ee-mahl</td>
+ <td>Red</td>
+ </tr>
+ <tr>
+ <td><strong>Sysi-bolee</strong></td>
+ <td>sis-ee-boh-lee</td>
+ <td>Green (bolee)</td>
+ </tr>
+ <tr>
+ <td><strong>Sysi-krul</strong></td>
+ <td>sis-ee-krul</td>
+ <td>Blue</td>
+ </tr>
+ </table>
+
+ <div class="note-box">
+ <h4>Colors as adjectives</h4>
+ <p>Color words go before the noun they describe, following Molah's standard adjective-before-noun rule. <em>Sysi-mahl tam</em> = red thing. <em>Sysi-krul wif</em> = blue place. For mixed colors, simply blend the roots: <em>Sysi-bolee-krul</em> = yellow (green+blue, sounds like one flowing word). The Sysi- prefix is a deliberate variation of Sys (to see) — close enough to remind you of its root, distinct enough to never be confused with the verb Sys in a sentence.</p>
+ </div>
+
+ <h3>Mixed colors — blended compound words</h3>
+ <p>To describe a color between two primaries, simply blend the two color roots together into one compound word. No special sound or separator needed — the words flow together as one.</p>
+
+ <table class="vocab-table">
+ <tr>
+ <th>Molah</th>
+ <th>Color produced</th>
+ <th>Logic</th>
+ </tr>
+ <tr>
+ <td><strong>Sysi-mahl-bolee</strong></td>
+ <td>Orange / Red-green</td>
+ <td>mahl (red) + bolee (green)</td>
+ </tr>
+ <tr>
+ <td><strong>Sysi-mahl-krul</strong></td>
+ <td>Magenta / Pink</td>
+ <td>mahl (red) + krul (blue)</td>
+ </tr>
+ <tr>
+ <td><strong>Sysi-bolee-krul</strong></td>
+ <td>Yellow</td>
+ <td>bolee (green) + krul (blue)</td>
+ </tr>
+ <tr>
+ <td><strong>Sysi-mahl-ootl</strong></td>
+ <td>Dark red / Brown</td>
+ <td>mahl (red) + ootl (black)</td>
+ </tr>
+ <tr>
+ <td><strong>Sysi-ala-mahl</strong></td>
+ <td>Pink / Light red</td>
+ <td>ala (white) + mahl (red)</td>
+ </tr>
+ <tr>
+ <td><strong>Sysi-ala-ootl</strong></td>
+ <td>Grey</td>
+ <td>ala (white) + ootl (black)</td>
+ </tr>
+ </table>
+
+ <div class="example-box">
+ <div class="molah">Ya bama sysi-krul tam.</div>
+ <div class="pronunciation">(yah bah-mah sis-ee-krul tam)</div>
+ <div class="translation">I want the blue thing.</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Wutu ur sysi-mahl-bolee.</div>
+ <div class="pronunciation">(woo-too ur sis-ee-mahl [!] sis-ee-boh-lee)</div>
+ <div class="translation">That is orange / red-green.</div>
+ </div>
+
+ <div class="exercise">
+ <h4>Practice: Colors</h4>
+ <div class="exercise-item">Say "blue car": Sysi-krul korby</div>
+ <div class="exercise-item">Say "white place": Sysi-ala wif</div>
+ <div class="exercise-item">Say "I want the green thing": Ya bama sysi-bolee tam</div>
+ <div class="exercise-item">Describe grey: Sysi-ala-ootl</div>
+ </div>
+
+ <div class="nav-buttons">
+ <button class="btn btn-secondary" onclick="nextLesson(9)">← Previous</button>
+ <button class="btn btn-secondary" onclick="skipQuiz(10, 11)">Skip quiz</button>
+ <button class="btn btn-primary" onclick="showQuiz(10)">Quiz: Colors →</button>
+ </div>
+ </div>
+
+ <!-- Quiz 10 -->
+ <div class="lesson hidden" id="quiz10"></div>
+
+ <!-- Lesson 11: Numbers -->
+ <div class="lesson hidden" id="lesson11">
+ <h2>Lesson 11: Numbers in Molah</h2>
+
+ <p>Molah speakers have two options for numbers: use the local language's numbers (always acceptable in Molah — practicality comes first), or use the Molah number system. Both are valid. The Molah system is described here for those who want a fully self-contained language experience.</p>
+
+ <div class="note-box">
+ <h4>The Mr system</h4>
+ <p><strong>Mr</strong> (pronounced <strong>"Murh"</strong> — like the word <em>myrrh</em>, the fragrant resin) is the number root — it means "one" or signals that a number follows. Powers of ten are built by adding vowels. Individual digits 2–9 are built by adding consonants. Combine them to make any number.</p>
+ </div>
+
+ <h3>Digits</h3>
+ <table class="vocab-table">
+ <tr>
+ <th>Molah</th>
+ <th>Pronunciation</th>
+ <th>Value</th>
+ </tr>
+ <tr><td><strong>[~]</strong></td><td>(teeth-suck)</td><td>0 (zero)</td></tr>
+ <tr><td><strong>Mr</strong></td><td>murh</td><td>1</td></tr>
+ <tr><td><strong>Mr-B</strong></td><td>murh-buh</td><td>2</td></tr>
+ <tr><td><strong>Mr-F</strong></td><td>murh-fih</td><td>3</td></tr>
+ <tr><td><strong>Mr-H</strong></td><td>murh-heh</td><td>4</td></tr>
+ <tr><td><strong>Mr-K</strong></td><td>murh-kuh</td><td>5</td></tr>
+ <tr><td><strong>Mr-L</strong></td><td>murh-luh</td><td>6</td></tr>
+ <tr><td><strong>Mr-M</strong></td><td>murh-mmm</td><td>7</td></tr>
+ <tr><td><strong>Mr-R</strong></td><td>murh-err</td><td>8</td></tr>
+ <tr><td><strong>Mr-S</strong></td><td>murh-suh</td><td>9</td></tr>
+ </table>
+
+ <h3>Powers of ten</h3>
+ <table class="vocab-table">
+ <tr>
+ <th>Molah</th>
+ <th>Pronunciation</th>
+ <th>Value</th>
+ </tr>
+ <tr><td><strong>Mr-A</strong></td><td>murh-auh</td><td>10</td></tr>
+ <tr><td><strong>Mr-I</strong></td><td>murh-ihh</td><td>100</td></tr>
+ <tr><td><strong>Mr-O</strong></td><td>murh-ohh</td><td>1,000</td></tr>
+ <tr><td><strong>Mr-U</strong></td><td>murh-oowh</td><td>10,000</td></tr>
+ <tr><td><strong>Mr-Y</strong></td><td>murh-eee</td><td>100,000</td></tr>
+ </table>
+
+ <h3>Combining numbers with [!]</h3>
+ <p>The tongue click <strong>[!]</strong> separates number segments — just as it means "and" everywhere else in Molah. State the largest unit first, click, then the next unit. The listener simply adds them up. This keeps each component clearly distinct and easy to parse.</p>
+
+ <div class="note-box">
+ <h4>The rule</h4>
+ <p>To express a multi-digit number: say the largest unit, click [!], say the next unit, click again, and so on down to the smallest. For multiples of ten (20, 30, 40...) place the digit before the ten: <strong>Mr-B-A</strong> = two-ten = 20. Then click and add the ones: <strong>Mr-B-A [!] Mr-K</strong> = 25.</p>
+ </div>
+
+ <table class="vocab-table">
+ <tr>
+ <th>Molah</th>
+ <th>Value</th>
+ <th>Logic</th>
+ </tr>
+ <tr><td><strong>Mr-A [!] Mr</strong></td><td>11</td><td>10 [!] 1</td></tr>
+ <tr><td><strong>Mr-A [!] Mr-B</strong></td><td>12</td><td>10 [!] 2</td></tr>
+ <tr><td><strong>Mr-A [!] Mr-K</strong></td><td>15</td><td>10 [!] 5</td></tr>
+ <tr><td><strong>Mr-B-A [!] Mr</strong></td><td>21</td><td>2-tens [!] 1</td></tr>
+ <tr><td><strong>Mr-B-A [!] Mr-K</strong></td><td>25</td><td>2-tens [!] 5</td></tr>
+ <tr><td><strong>Mr-K-A [!] Mr</strong></td><td>51</td><td>5-tens [!] 1</td></tr>
+ <tr><td><strong>Mr-I [!] Mr-A [!] Mr-K</strong></td><td>115</td><td>100 [!] 10 [!] 5</td></tr>
+ <tr><td><strong>Mr-I [!] Mr-H-A [!] Mr-B</strong></td><td>142</td><td>100 [!] 4-tens [!] 2</td></tr>
+ </table>
+
+ <div class="note-box">
+ <h4>Writing numbers</h4>
+ <p>Molah speakers may also write numbers using <strong>Roman numerals</strong> (I, V, X, L, C, D, M) or standard <strong>Arabic numerals</strong> (1, 2, 3...) — both are universally understood and perfectly acceptable in written Molah. The Mr system is primarily for spoken use when no shared numeral system is available.</p>
+ </div>
+
+ <div class="note-box">
+ <h4>Zero — [~]</h4>
+ <p>Zero is written and spoken as <strong>[~]</strong> — the same teeth-suck sound that means "but" or "however." In context, the meaning is always clear: as a number it stands alone or alongside other number units.</p>
+ </div>
+
+ <h3>Practical examples</h3>
+ <div class="example-box">
+ <div class="molah">Tiva-Wif Mr-K</div>
+ <div class="pronunciation">(tiva-wif murh-kuh)</div>
+ <div class="translation">Gate 5</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Walh? — Mr-I [!] Mr-H-A [!] Mr-B</div>
+ <div class="pronunciation">(wahlh — murh-ihh [!] murh-heh-auh [!] murh-buh)</div>
+ <div class="translation">How much? — 142 (100 [!] 4-tens [!] 2)</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Tiva-Wif [~]</div>
+ <div class="pronunciation">(tiva-wif [~])</div>
+ <div class="translation">Gate zero</div>
+ </div>
+
+ <div class="exercise">
+ <h4>Practice: Numbers</h4>
+ <div class="exercise-item">Say "3": Mr-F</div>
+ <div class="exercise-item">Say "15": Mr-A [!] Mr-K (10 [!] 5)</div>
+ <div class="exercise-item">Say "21": Mr-B-A [!] Mr (2-tens [!] 1)</div>
+ <div class="exercise-item">Say "100": Mr-I</div>
+ <div class="exercise-item">Say "gate 7": Tiva-Wif Mr-M</div>
+ <div class="exercise-item">Say "250": Mr-B-I [!] Mr-K-A (2-hundreds [!] 5-tens)</div>
+ </div>
+
+ <div class="nav-buttons">
+ <button class="btn btn-secondary" onclick="nextLesson(10)">← Previous</button>
+ <button class="btn btn-secondary" onclick="skipQuiz(11, 12)">Skip quiz</button>
+ <button class="btn btn-primary" onclick="showQuiz(11)">Quiz: Numbers →</button>
+ </div>
+ </div>
+
+ <!-- Quiz 11 -->
+ <div class="lesson hidden" id="quiz11"></div>
+
+ <!-- Quiz 9 -->
+ <div class="lesson hidden" id="quiz9"></div>
+
+
+ <!-- Lesson 12: Negations -->
+ <div class="lesson hidden" id="lesson12">
+ <h2>Lesson 12: Making negatives with Ill-</h2>
+
+ <p>To make any verb or adjective negative in Molah, simply add the prefix <strong>Ill-</strong> directly before it. This is the only negation rule in Molah — no irregular forms, no exceptions.</p>
+
+ <div style="background:#EEEDFE;padding:1.5rem;border-radius:8px;font-weight:500;font-size:1.25rem;color:#3C3489;text-align:center;margin:1.5rem 0;">
+ Ill- + [verb or adjective] = not / don't / cannot
+ </div>
+
+ <div class="note-box">
+ <h4>Ill- vs Illi (lose)</h4>
+ <p><strong>Ill-</strong> is always hyphenated and attached to another word. <strong>Illi</strong> is the standalone verb meaning "to lose." They are never confused in context — Ill- is a prefix, Illi is a complete word. The hyphen makes the difference visible in writing.</p>
+ </div>
+
+ <h3>Core negation examples</h3>
+ <table class="vocab-table">
+ <tr>
+ <th>Positive</th>
+ <th>Negative</th>
+ <th>Translation</th>
+ </tr>
+ <tr>
+ <td>Ya kabah.</td>
+ <td><strong>Ya ill-kabah.</strong></td>
+ <td>I don't know.</td>
+ </tr>
+ <tr>
+ <td>Ya kab.</td>
+ <td><strong>Ya ill-kab.</strong></td>
+ <td>I don't understand.</td>
+ </tr>
+ <tr>
+ <td>Ya bo.</td>
+ <td><strong>Ya ill-bo.</strong></td>
+ <td>I cannot go. / I am not going.</td>
+ </tr>
+ <tr>
+ <td>Ya bama raz-itah.</td>
+ <td><strong>Ya ill-bama raz-itah.</strong></td>
+ <td>I don't want to sit down.</td>
+ </tr>
+ <tr>
+ <td>Yuhm.</td>
+ <td><strong>Ill-yuhm.</strong></td>
+ <td>Not good.</td>
+ </tr>
+ <tr>
+ <td>Ya tamala yuhm.</td>
+ <td><strong>Ya tamala ill-yuhm.</strong></td>
+ <td>I think it is not good. (I feel not-good)</td>
+ </tr>
+ <tr>
+ <td>Ya bama it.</td>
+ <td><strong>Ya ill-bama it.</strong></td>
+ <td>I don't want to eat.</td>
+ </tr>
+ <tr>
+ <td>Ham ur wu.</td>
+ <td><strong>Ham ill-ur wu.</strong></td>
+ <td>He/She is not here.</td>
+ </tr>
+ </table>
+
+ <h3>Ill- with adjectives and states</h3>
+ <table class="vocab-table">
+ <tr>
+ <th>Molah</th>
+ <th>Translation</th>
+ </tr>
+ <tr>
+ <td><strong>Ill-yuhm</strong></td>
+ <td>Not good (already used naturally in conversations)</td>
+ </tr>
+ <tr>
+ <td><strong>Ill-bah</strong></td>
+ <td>Not bad (so-so)</td>
+ </tr>
+ <tr>
+ <td><strong>Ill-tami</strong></td>
+ <td>Not sick / feeling well</td>
+ </tr>
+ <tr>
+ <td><strong>Ill-woom</strong></td>
+ <td>Not fast / slow</td>
+ </tr>
+ <tr>
+ <td><strong>Ill-faka</strong></td>
+ <td>Not forbidden / allowed</td>
+ </tr>
+ </table>
+
+ <div class="note-box">
+ <h4>Ill- with Bah-t</h4>
+ <p>In Molah, <strong>Bah-t</strong> means "no" as a standalone response. <strong>Ill-</strong> is used within a sentence to negate a specific word. Think of Bah-t as "No!" and Ill- as "not" or "don't." You wouldn't say "Ill-" alone — attach it to something.</p>
+ </div>
+
+ <h3>Longer sentence examples</h3>
+
+ <div class="example-box">
+ <div class="molah">Ya ill-kabah zee-kahb ya ill-tafl Molah yuhm-yuhm.</div>
+ <div class="pronunciation">(yah ill-kah-bah zee-kahb yah ill-tafl moe-lah yoom-yoom)</div>
+ <div class="translation">I don't know because I don't speak Molah very well.</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Ya ill-bama brim zee-kahb ya ill-tami.</div>
+ <div class="pronunciation">(yah ill-bah-mah brim zee-kahb yah ill-tah-mee)</div>
+ <div class="translation">I don't want a drink because I am not sick.</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Ham ill-ur wu [~] ham ill-bo-ko.</div>
+ <div class="pronunciation">(hahm ill-ur woo [~] hahm ill-boh-koh)</div>
+ <div class="translation">He is not here but he did not go either.</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Ya tamala ill-yuhm zee-kahb wythar ur bah-bah.</div>
+ <div class="pronunciation">(yah tah-mah-lah ill-yoom zee-kahb wy-thar ur bah-bah)</div>
+ <div class="translation">I think it is not good because the weather is really bad.</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Ya ill-bama raz-itah — ya bama bo sysi-wif!</div>
+ <div class="pronunciation">(yah ill-bah-mah raz-ih-tah — yah bah-mah boh sis-ee-wif)</div>
+ <div class="translation">I don't want to sit down — I want to go to the movie theater!</div>
+ </div>
+
+ <h3>Negating tenses</h3>
+ <p>Ill- works with all tenses. The tense suffix stays on the verb, Ill- stays in front:</p>
+
+ <table class="vocab-table">
+ <tr>
+ <th>Tense</th>
+ <th>Positive</th>
+ <th>Negative</th>
+ <th>Meaning</th>
+ </tr>
+ <tr>
+ <td>Present</td>
+ <td>Ya bo.</td>
+ <td><strong>Ya ill-bo.</strong></td>
+ <td>I don't go.</td>
+ </tr>
+ <tr>
+ <td>Past</td>
+ <td>Ya bo-ko.</td>
+ <td><strong>Ya ill-bo-ko.</strong></td>
+ <td>I did not go.</td>
+ </tr>
+ <tr>
+ <td>Future</td>
+ <td>Ya bo-tu.</td>
+ <td><strong>Ya ill-bo-tu.</strong></td>
+ <td>I will not go.</td>
+ </tr>
+ </table>
+
+ <div class="exercise">
+ <h4>Practice: Make it negative</h4>
+ <div class="exercise-item">"I know" → Ya kabah → Ya ill-kabah</div>
+ <div class="exercise-item">"Good" → Yuhm → Ill-yuhm</div>
+ <div class="exercise-item">"I want to eat" → Ya bama it → Ya ill-bama it</div>
+ <div class="exercise-item">"I went" → Ya bo-ko → Ya ill-bo-ko</div>
+ <div class="exercise-item">"I will sit" → Ya raz-itah-tu → Ya ill-raz-itah-tu</div>
+ <div class="exercise-item">"Not bad!" → Ill-bah lah!</div>
+ </div>
+
+ <div class="nav-buttons">
+ <button class="btn btn-secondary" onclick="nextLesson(11)">← Previous</button>
+ <button class="btn btn-secondary" onclick="skipQuiz(12, 13)">Skip quiz</button>
+ <button class="btn btn-primary" onclick="showQuiz(12)">Quiz: Negations →</button>
+ </div>
+ </div>
+
+ <!-- Quiz 12 -->
+ <div class="lesson hidden" id="quiz12"></div>
+
+
+ <!-- Lesson 13: Descriptors -->
+ <div class="lesson hidden" id="lesson13">
+ <h2>Lesson 13: Describing the world — Easy, Hard, Long, Short</h2>
+
+ <p>Four essential descriptors round out your ability to describe experience in Molah. Each word was chosen so that its sound matches its meaning — a Molah principle called <em>sound honesty</em>.</p>
+
+ <table class="vocab-table">
+ <tr>
+ <th>Molah</th>
+ <th>Pronunciation</th>
+ <th>English</th>
+ <th>Logic</th>
+ </tr>
+ <tr>
+ <td><strong>Kool</strong></td>
+ <td>kool</td>
+ <td>Easy / Smooth</td>
+ <td>Already in language as "smooth" — a smooth path is an easy one</td>
+ </tr>
+ <tr>
+ <td><strong>Strak</strong></td>
+ <td>strak</td>
+ <td>Hard / Difficult</td>
+ <td>Hard consonants — sounds like effort and resistance</td>
+ </tr>
+ <tr>
+ <td><strong>Loom</strong></td>
+ <td>loom</td>
+ <td>Long</td>
+ <td>A drawn-out vowel — the word itself feels long</td>
+ </tr>
+ <tr>
+ <td><strong>Tib</strong></td>
+ <td>tib</td>
+ <td>Short</td>
+ <td>Short and clipped — the word embodies what it describes</td>
+ </tr>
+ </table>
+
+ <div class="note-box">
+ <h4>Kool does double duty</h4>
+ <p>Kool already existed in Molah meaning smooth. Now it extends to easy — because in Molah, easy and smooth are the same idea: a path without resistance. You can use Kool for both. <em>Molah ur kool!</em> = Molah is easy!</p>
+ </div>
+
+ <h3>Using the descriptors</h3>
+
+ <div class="example-box">
+ <div class="molah speakable" onclick="speak('Molah ur kool', this)" title="Tap to hear">Molah ur kool! <span class="speak-icon">🔊</span></div>
+ <div class="pronunciation">(moe-lah ur kool)</div>
+ <div class="translation">Molah is easy!</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah speakable" onclick="speak('Ya tamala strak', this)" title="Tap to hear">Ya tamala strak. <span class="speak-icon">🔊</span></div>
+ <div class="pronunciation">(yah tah-mah-lah strak)</div>
+ <div class="translation">I find it difficult. (I feel hard.)</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah speakable" onclick="speak('Wu ur loom tafl', this)" title="Tap to hear">Wu ur loom tafl. <span class="speak-icon">🔊</span></div>
+ <div class="pronunciation">(woo ur loom tafl)</div>
+ <div class="translation">This is a long conversation.</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah speakable" onclick="speak('Ya bama tib tafl', this)" title="Tap to hear">Ya bama tib tafl. <span class="speak-icon">🔊</span></div>
+ <div class="pronunciation">(yah bah-mah tib tafl)</div>
+ <div class="translation">I want a short conversation.</div>
+ </div>
+
+ <h3>With negation — Ill-</h3>
+ <p>Because Ill- works on any adjective, each word doubles your expressive range:</p>
+
+ <table class="vocab-table">
+ <tr>
+ <th>Molah</th>
+ <th>English</th>
+ </tr>
+ <tr><td><strong>Ill-kool</strong></td><td>Not easy / Not smooth</td></tr>
+ <tr><td><strong>Ill-strak</strong></td><td>Not hard / Manageable</td></tr>
+ <tr><td><strong>Ill-loom</strong></td><td>Not long / Brief</td></tr>
+ <tr><td><strong>Ill-tib</strong></td><td>Not short / Extended</td></tr>
+ </table>
+
+ <div class="example-box">
+ <div class="molah">Molah ur ill-strak zee-kahb tafl-ham ur kool-kool.</div>
+ <div class="pronunciation">(moe-lah ur ill-strak zee-kahb tafl-ham ur kool-kool)</div>
+ <div class="translation">Molah is not difficult because its speakers are very smooth/easy.</div>
+ </div>
+
+ <h3>Useful compounds</h3>
+ <table class="vocab-table">
+ <tr>
+ <th>Compound</th>
+ <th>Meaning</th>
+ </tr>
+ <tr><td><strong>Strak-Wif</strong></td><td>Obstacle / Difficult place</td></tr>
+ <tr><td><strong>Loom-tafl</strong></td><td>Long speech / Long conversation</td></tr>
+ <tr><td><strong>Tib-tafl</strong></td><td>Brief / Short speech</td></tr>
+ <tr><td><strong>Kool-bo</strong></td><td>Easy journey / Smooth travel</td></tr>
+ </table>
+
+ <div class="exercise">
+ <h4>Practice: Describe it</h4>
+ <div class="exercise-item">"Molah is easy": Molah ur kool.</div>
+ <div class="exercise-item">"This is difficult": Wu ur strak.</div>
+ <div class="exercise-item">"I want a short conversation": Ya bama tib tafl.</div>
+ <div class="exercise-item">"Not difficult": Ill-strak</div>
+ <div class="exercise-item">"A long journey": Loom tiv</div>
+ <div class="exercise-item">"Smooth and easy!": Kool-kool lah!</div>
+ </div>
+
+ <div class="nav-buttons">
+ <button class="btn btn-secondary" onclick="nextLesson(12)">← Previous</button>
+ <button class="btn btn-secondary" onclick="skipQuiz(13, 14)">Skip quiz</button>
+ <button class="btn btn-primary" onclick="showQuiz(13)">Quiz: Descriptors →</button>
+ </div>
+ </div>
+
+ <!-- Quiz 13 -->
+ <div class="lesson hidden" id="quiz13"></div>
+
+ <!-- Lesson 14: School & Community -->
+ <div class="lesson hidden" id="lesson14">
+ <h2>Lesson 14: School, learning, and community</h2>
+
+ <p>Molah builds its education vocabulary from roots you already know: <strong>Kabah</strong> (to know), <strong>Wif</strong> (place), <strong>Ham</strong> (person), <strong>Tib</strong> (short), and <strong>Boki</strong> (grow). Combined, they create a transparent system that traces the whole arc of learning.</p>
+
+ <h3>Education words</h3>
+ <table class="vocab-table">
+ <tr><th>Molah</th><th>Pronunciation</th><th>English</th><th>Logic</th></tr>
+ <tr><td><strong>Tib-Ham</strong></td><td>tib-hahm</td><td>Child</td><td>short-person</td></tr>
+ <tr><td><strong>Kabah-Wif</strong></td><td>kah-bah-wif</td><td>School</td><td>know-place</td></tr>
+ <tr><td><strong>Kabah-Kabah-Wif</strong></td><td>kah-bah-kah-bah-wif</td><td>University</td><td>really-know-place</td></tr>
+ <tr><td><strong>Tib-Ham-Kabah-Wif</strong></td><td>tib-hahm-kah-bah-wif</td><td>Elementary school</td><td>short-person-know-place</td></tr>
+ <tr><td><strong>Kabah-Ham</strong></td><td>kah-bah-hahm</td><td>Professor / Teacher</td><td>know-person</td></tr>
+ <tr><td><strong>Boki-Tib-Ham</strong></td><td>boh-kee-tib-hahm</td><td>Child student</td><td>growing-short-person</td></tr>
+ <tr><td><strong>Boki-Ham</strong></td><td>boh-kee-hahm</td><td>Older student / College student</td><td>growing-person</td></tr>
+ </table>
+
+ <div class="note-box">
+ <h4>The journey of learning in four words</h4>
+ <p>The education words form a natural progression visible in the roots: <strong>Tib-Ham</strong> (child) → <strong>Boki-Tib-Ham</strong> (child student, still growing) → <strong>Boki-Ham</strong> (older student, a person in growth) → <strong>Kabah-Ham</strong> (professor, the one who knows). The whole arc of learning is in the words themselves.</p>
+ </div>
+
+ <div class="note-box">
+ <h4>Doubling for university</h4>
+ <p>University uses the same intensification doubling as low-low (really love) and woom-woom (very fast). <strong>Kabah-Kabah-Wif</strong> = really-know-place = university. No new rule needed — just the rule you already learned.</p>
+ </div>
+
+ <div class="example-box">
+ <div class="molah speakable" onclick="speak('Ya bo Kabah Wif', this)" title="Tap to hear">Ya bo Kabah-Wif. <span class="speak-icon">🔊</span></div>
+ <div class="pronunciation">(yah boh kah-bah-wif)</div>
+ <div class="translation">I go to school.</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah speakable" onclick="speak('Kabah Ham ur yuhm yuhm lah', this)" title="Tap to hear">Kabah-Ham ur yuhm-yuhm lah! <span class="speak-icon">🔊</span></div>
+ <div class="pronunciation">(kah-bah-hahm ur yoom-yoom lah)</div>
+ <div class="translation">The professor is really great!</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah speakable" onclick="speak('Boki Ham bo Kabah Kabah Wif', this)" title="Tap to hear">Boki-Ham bo Kabah-Kabah-Wif. <span class="speak-icon">🔊</span></div>
+ <div class="pronunciation">(boh-kee-hahm boh kah-bah-kah-bah-wif)</div>
+ <div class="translation">The college student goes to university.</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Boki-Tib-Ham bama kab zee-kahb Kabah-Ham ur kool.</div>
+ <div class="pronunciation">(boh-kee-tib-hahm bah-mah kab zee-kahb kah-bah-hahm ur kool)</div>
+ <div class="translation">The child student wants to understand because the teacher is easy/good.</div>
+ </div>
+
+ <div class="exercise">
+ <h4>Practice: School life</h4>
+ <div class="exercise-item">"I go to school": Ya bo Kabah-Wif.</div>
+ <div class="exercise-item">"The child": Tib-Ham</div>
+ <div class="exercise-item">"University": Kabah-Kabah-Wif</div>
+ <div class="exercise-item">"The professor": Kabah-Ham</div>
+ <div class="exercise-item">"Child student": Boki-Tib-Ham</div>
+ <div class="exercise-item">"College student": Boki-Ham</div>
+ <div class="exercise-item">"She went to university": Ham bo-ko Kabah-Kabah-Wif.</div>
+ <div class="exercise-item">"The professor is good": Kabah-Ham ur yuhm.</div>
+ </div>
+
+ <div class="nav-buttons">
+ <button class="btn btn-secondary" onclick="nextLesson(13)">← Previous</button>
+ <button class="btn btn-secondary" onclick="skipQuiz(14, 15)">Skip quiz</button>
+ <button class="btn btn-primary" onclick="showQuiz(14)">Quiz: School →</button>
+ </div>
+ </div>
+
+ <!-- Quiz 14 -->
+ <div class="lesson hidden" id="quiz14"></div>
+
+ <!-- Lesson 14: Advantages of Molah -->
+ <!-- Lesson 15: Making Molah Words -->
+ <div class="lesson hidden" id="lesson15">
+ <h2>Lesson 15: Making Molah words — and your Molah name</h2>
+
+ <p>Molah has a fixed vocabulary of core words — but the world has far more concepts than any small language can contain. Two tools handle this gracefully: <strong>borrowing local words</strong> and <strong>converting words into Molah</strong>.</p>
+
+ <h3>Tool 1 — Use local words freely</h3>
+ <p>If a word does not exist in Molah, simply use the local word in the middle of your Molah sentence. This is not a mistake — it is encouraged, especially when you are a visitor in someone else's country. The local word takes priority.</p>
+
+ <div class="example-box">
+ <div class="molah">Ya bama brim wine.</div>
+ <div class="pronunciation">(yah bah-mah brim wine)</div>
+ <div class="translation">I want to drink wine. — local word used as-is.</div>
+ </div>
+
+ <div class="example-box">
+ <div class="molah">Wu ur loom tafl zee-kahb philosophy ur strak.</div>
+ <div class="pronunciation">(woo ur loom tafl zee-kahb philosophy ur strak)</div>
+ <div class="translation">This is a long conversation because philosophy is difficult.</div>
+ </div>
+
+ <h3>Tool 2 — Convert words into Molah</h3>
+ <p>If you prefer to keep everything inside the Molah sound system, convert the word using three steps:</p>
+
+ <div style="background:#EEEDFE;border-radius:8px;padding:1.25rem 1.5rem;margin:1rem 0;">
+ <p style="margin:0 0 0.5rem;font-weight:600;color:#3C3489;">The conversion rule:</p>
+ <ol style="margin:0;padding-left:1.25rem;color:#3C3489;line-height:2;">
+ <li>Write the word in its normal spelling</li>
+ <li>Remove any letters <strong>not</strong> in the Molah alphabet: <strong>C D E G J N P Q V X</strong> (and Y when used as a vowel sound)</li>
+ <li>Pronounce what remains using Molah letter sounds</li>
+ </ol>
+ </div>
+
+ <div class="note-box">
+ <h4>The Molah alphabet — 16 letters only</h4>
+ <p>Vowels: <strong>A I O U Y</strong> &nbsp;•&nbsp; Consonants: <strong>B F H K L M R S T W Z</strong><br>
+ Any letter outside this set is simply removed from the converted word.</p>
+ </div>
+
+ <h3>Conversion examples</h3>
+ <table class="vocab-table">
+ <tr>
+ <th>Original word</th>
+ <th>Letters removed</th>
+ <th>Molah version</th>
+ <th>Pronunciation</th>
+ </tr>
+ <tr>
+ <td>Santullo</td>
+ <td>N</td>
+ <td><strong>Satullo</strong></td>
+ <td>sah-tul-loh</td>
+ </tr>
+ <tr>
+ <td>Philosophy</td>
+ <td>P, P, Y (vowel)</td>
+ <td><strong>Hilosohy</strong></td>
+ <td>hih-loh-soh-ee</td>
+ </tr>
+ <tr>
+ <td>Wine</td>
+ <td>N, E</td>
+ <td><strong>Wi</strong></td>
+ <td>wih</td>
+ </tr>
+ <tr>
+ <td>Horse</td>
+ <td>E</td>
+ <td><strong>Hors</strong></td>
+ <td>hohrz</td>
+ </tr>
+ <tr>
+ <td>Bowl</td>
+ <td>(none)</td>
+ <td><strong>Bowl</strong> — or use <strong>Ish</strong> (from Dish) if needed</td>
+ <td>boh-wluh / ish</td>
+ </tr>
+ <tr>
+ <td>School</td>
+ <td>C</td>
+ <td><strong>Shool</strong></td>
+ <td>shool</td>
+ </tr>
+ <tr>
+ <td>Bread</td>
+ <td>E</td>
+ <td><strong>Bra</strong> (wait — D also removed)</td>
+ <td>brah</td>
+ </tr>
+ <tr>
+ <td>Music</td>
+ <td>C</td>
+ <td><strong>Musi</strong></td>
+ <td>moo-sih</td>
+ </tr>
+ </table>
+
+ <div class="note-box">
+ <h4>Converted words in a sentence</h4>
+ <p>Once converted, the Molah version works just like any other word. You can add tense markers, the lah ending, or Ill- prefix: <em>Ya bama brim wi lah!</em> = I really want a drink of wine (happily)! &nbsp;•&nbsp; <em>Ham tafl-tu Hilosohy.</em> = They will speak about philosophy.</p>
+ </div>
+
+ <div class="note-box">
+ <h4>What if the converted word sounds like an existing Molah word?</h4>
+ <p>Don't worry — context usually makes the meaning clear to the listener. If someone says <em>Ya bama bowl</em>, the listener will understand from context whether they mean a bowl (dish) or something else. However, if the collision causes genuine confusion, simply change the word. For example, <strong>Bowl</strong> converted from English becomes Bowl in Molah — but if that causes confusion, use <strong>Ish</strong> instead (from Dish: D-i-s-h → remove D → <em>Ish</em>). The listener's understanding always wins.</p>
+ </div>
+
+ <h3>Your Molah name</h3>
+ <p>Every Molah speaker is encouraged to write and speak their own name in Molah. Apply the same rule — remove non-Molah letters, pronounce what remains with Molah sounds. Your Molah name becomes part of your identity as a speaker.</p>
+
+ <div class="example-box">
+ <div class="molah">Ya ur Satullo. Wu-wu, yo ur?</div>
+ <div class="pronunciation">(yah ur sah-tul-loh. woo-woo, yoh ur?)</div>
+ <div class="translation">I am Satullo. Where are you from? (or: What is your name?)</div>
+ </div>
+
+ <div class="note-box">
+ <h4>Try it now</h4>
+ <p>Write your name. Remove any C D E G J N P Q V X letters. What remains is your Molah name. Say it aloud using Molah sounds. This is one of the first things Molah speakers share with each other — <em>Ya ur [your Molah name]!</em></p>
+ </div>
+
+ <div class="exercise">
+ <h4>Practice: Convert these words</h4>
+ <div class="exercise-item">Coffee → remove C → "offee" → remove second E? Koffee in Molah: Kofi (koh-fih) — or just use Hakka-lah!</div>
+ <div class="exercise-item">Garden → remove G, D, E, N → Ar → (ahr)</div>
+ <div class="exercise-item">Village → remove V, G, E → Illa (ih-lah)</div>
+ <div class="exercise-item">Money → remove N, E, Y-vowel → Mo (moh) — already in Molah as "we"! Use local word instead.</div>
+ <div class="exercise-item">Your name → remove non-Molah letters → say it in Molah sounds</div>
+ </div>
+
+ <div class="nav-buttons">
+ <button class="btn btn-secondary" onclick="nextLesson(14)">← Previous</button>
+ <button class="btn btn-secondary" onclick="skipQuiz(15, 16)">Skip quiz</button>
+ <button class="btn btn-primary" onclick="showQuiz(15)">Quiz: Making Molah Words →</button>
+ </div>
+ </div>
+
+ <!-- Quiz 15 -->
+ <div class="lesson hidden" id="quiz15"></div>
+
+ <div class="lesson hidden" id="lesson16">
+ <h2>Lesson 16: Why Molah is easier than any other language</h2>
+ 
+ <p>Molah is designed to be the world's easiest language to learn for cross-cultural communication. Here's how it compares to other "easy" languages:</p>
+
+ <h3>Molah vs. World Languages</h3>
+ <table class="comparison-table">
+ <tr>
+ <th>Feature</th>
+ <th>Molah</th>
+ <th>Esperanto</th>
+ <th>English</th>
+ <th>Mandarin</th>
+ </tr>
+ <tr>
+ <td>Letters/Characters</td>
+ <td><strong>16 letters</strong></td>
+ <td>28 letters</td>
+ <td>26 letters</td>
+ <td>~3,000 characters</td>
+ </tr>
+ <tr>
+ <td>Core vocabulary to learn</td>
+ <td><strong>~200 words</strong></td>
+ <td>~2,000 words</td>
+ <td>~3,000 words</td>
+ <td>~2,000 words</td>
+ </tr>
+ <tr>
+ <td>Verb conjugations</td>
+ <td><strong>2 (ko/tu)</strong></td>
+ <td>6 tenses</td>
+ <td>12+ tenses</td>
+ <td>None (but complex aspect)</td>
+ </tr>
+ <tr>
+ <td>Irregular verbs</td>
+ <td><strong>0</strong></td>
+ <td>0</td>
+ <td>~200</td>
+ <td>N/A</td>
+ </tr>
+ <tr>
+ <td>Genders</td>
+ <td><strong>0</strong></td>
+ <td>0</td>
+ <td>0</td>
+ <td>0</td>
+ </tr>
+ <tr>
+ <td>Word order</td>
+ <td><strong>Fixed S-V-O</strong></td>
+ <td>Flexible</td>
+ <td>Fixed S-V-O</td>
+ <td>S-V-O</td>
+ </tr>
+ <tr>
+ <td>Learning time</td>
+ <td><strong>2-3 weeks</strong></td>
+ <td>3-6 months</td>
+ <td>6-24 months</td>
+ <td>24+ months</td>
+ </tr>
+ </table>
+
+ <h3>Key advantages of Molah</h3>
+
+ <div class="advantage-card">
+ <h4>1. Phonetic clarity</h4>
+ <p>Every letter has exactly ONE sound with a distinct mouth position. No confusion between similar sounds like 'b' and 'p' or 'l' and 'r'. Visual learners can literally see the difference by watching the speaker's mouth.</p>
+ </div>
+
+ <div class="advantage-card">
+ <h4>2. Zero exceptions</h4>
+ <p>Unlike English (I go/I went), Spanish (ser/estar both mean "to be"), or French (17 verb conjugations), Molah has ZERO grammatical exceptions. Every verb follows the same pattern: add -ko for past, -tu for future. Always.</p>
+ </div>
+
+ <div class="advantage-card">
+ <h4>3. Minimal vocabulary</h4>
+ <p>80 core words handle all essential communication. Compare to Esperanto's 2,000+ vocabulary requirement or English's thousands of irregularly formed words. You can communicate effectively with just a few hundred Molah words.</p>
+ </div>
+
+ <div class="advantage-card">
+ <h4>4. No cultural baggage</h4>
+ <p>Unlike English (colonial history), Mandarin (Chinese dominance), or Spanish (Latin American politics), Molah belongs to no nation or culture. It's neutral by design.</p>
+ </div>
+
+ <div class="advantage-card">
+ <h4>5. Practical focus</h4>
+ <p>Molah isn't trying to be a complete language for poetry, philosophy, or technical discourse. It's designed specifically for: buying things, asking directions, making friends, basic needs, travel situations. This narrow focus makes it incredibly efficient.</p>
+ </div>
+
+ <div class="advantage-card">
+ <h4>6. Self-limiting design</h4>
+ <p>The rule "do not add new verbs" ensures Molah stays learnable. Every speaker uses the same 80 core words, making mutual understanding guaranteed. Other constructed languages grow unwieldy as speakers add vocabulary.</p>
+ </div>
+
+ <div class="advantage-card">
+ <h4>7. Systematic intensification</h4>
+ <p>Instead of memorizing "good/better/best" or "fast/faster/fastest", just double the word: yuhm/yuhm-yuhm, woom/woom-woom. One simple pattern handles all intensity.</p>
+ </div>
+
+ <div class="advantage-card">
+ <h4>8. Time system consistency</h4>
+ <p>The same -ko/-tu pattern works for verbs AND time words. Learn it once, use it everywhere: bo/bo-ko/bo-tu (go/went/will go), zora/zora-ko/zora-tu (today/yesterday/tomorrow).</p>
+ </div>
+
+ <div style="background: #EEEDFE; padding: 2rem; border-radius: 12px; margin-top: 2rem; text-align: center;">
+ <h3 style="color: #3C3489; margin-bottom: 1rem;">You've completed the Molah course!</h3>
+ <p style="color: #534AB7; font-size: 1.125rem; margin-bottom: 1.5rem;">You now have all the tools to communicate in Molah. The best way to improve is to practice with other Molah speakers. Share this course and help build a global community of Molah users!</p>
+ <p style="color: #3C3489; font-weight: 500;">Ya low-low yo! Mo ur Molah tafl-ham lah-lah!</p>
+ <p style="color: #534AB7; font-size: 0.9375rem; font-style: italic;">(I really love you! We are Molah speakers, very happily!)</p>
+ </div>
+
+ <div class="nav-buttons">
+ <button class="btn btn-secondary" onclick="nextLesson(11)">← Previous</button>
+ <button class="btn btn-primary" onclick="showSummary()">See my scores →</button>
+ </div>
+ </div>
+ <!-- Score Summary -->
+ <div class="lesson hidden" id="scoreSummary"></div>
+ </div>
+
+ <footer>
+ <p><strong>Molah</strong> - A minimal lingua franca for global communication</p>
+ <p style="margin-top: 0.5rem;">Created by Santullo • 16 letters • 80 core words • 0 exceptions</p>
+ </footer>
+
+ <script>
+ // ── Language system ──────────────────────────────────────────
+ let LANG = 'en';
+ const LANG_NAMES = { en: 'English', es: 'Español', fr: 'Français', ja: '日本語' };
+ const LANG_LOADING = {
+ en: 'Loading...',
+ es: 'Traduciendo...',
+ fr: 'Traduction en cours...',
+ ja: '翻訳中...'
+ };
+ const LANG_CACHE_KEY = 'molah_translations';
+
+ function getLangCache() {
+ try { return JSON.parse(sessionStorage.getItem(LANG_CACHE_KEY)) || {}; } catch(e) { return {}; }
+ }
+ function setLangCache(cache) {
+ try { sessionStorage.setItem(LANG_CACHE_KEY, JSON.stringify(cache)); } catch(e) {}
+ }
+
+ async function selectLang(lang) {
+ LANG = lang;
+ // Hide landing page
+ document.getElementById('langSelect').style.display = 'none';
+ // Show lang switcher
+ const switcher = document.getElementById('langSwitcher');
+ switcher.style.display = 'block';
+ switcher.querySelector('select').value = lang;
+ // Show lesson toolbar
+ const toolbar = document.getElementById('lessonToolbar');
+ if (toolbar) toolbar.style.display = 'flex';
+ // Start the course
+ nextLesson(0);
+ // Pre-translate intro immediately if non-English
+ if (lang !== 'en') {
+ await translateCurrentLesson(0);
+ }
+ }
+
+ async function changeLang(lang) {
+ LANG = lang;
+ // Re-translate current visible lesson
+ const visibleLesson = document.querySelector('.lesson:not(.hidden), .intro:not(.hidden)');
+ if (visibleLesson) {
+ const id = visibleLesson.id;
+ const num = id.replace('lesson', '');
+ await translateCurrentLesson(num);
+ }
+ }
+
+ function showTransOverlay(msg) {
+ const el = document.getElementById('transOverlay');
+ document.getElementById('transMsg').textContent = msg || LANG_LOADING[LANG];
+ el.style.display = 'flex';
+ }
+ function hideTransOverlay() {
+ document.getElementById('transOverlay').style.display = 'none';
+ }
+
+ async function translateCurrentLesson(lessonId) {
+ if (LANG === 'en') return; // English is native, no translation needed
+
+ const el = document.getElementById('lesson' + lessonId);
+ if (!el) return;
+
+ const cacheKey = LANG + '_lesson_' + lessonId;
+ const cache = getLangCache();
+
+ if (cache[cacheKey]) {
+ // Use cached translation — preserve nav buttons (always English-structure)
+ applyTranslation(el, cache[cacheKey]);
+ return;
+ }
+
+ // Extract translatable content — everything except .nav-buttons and script
+ const originalHTML = el.innerHTML;
+
+ showTransOverlay(LANG_LOADING[LANG]);
+
+ try {
+ const langNames = { es: 'Spanish', fr: 'French', ja: 'Japanese' };
+ const targetLang = langNames[LANG];
+
+ const prompt = `You are translating a Molah language learning course into ${targetLang}.
+
+CRITICAL RULES:
+1. Translate ALL explanatory text, headings, labels, table headers, exercise instructions, and note boxes into ${targetLang}.
+2. NEVER translate Molah words themselves. Molah words are: any word in <strong> tags inside <td> elements, any text inside <div class="molah"> elements, and any text inside <div class="pronunciation"> elements. Leave those exactly as-is.
+3. NEVER translate proper nouns: Molah, Santullo, Lowi, Bolah, Ya, Yo, Ham, Mo, Ur, Bo, Bama, Kab, Low, Wu, Wutu, Kif, and all other Molah vocabulary words.
+4. Keep all HTML tags, attributes, onclick handlers, class names, and IDs exactly as they are.
+5. Keep all [!] and [~] symbols exactly as-is.
+6. For Japanese: use natural Japanese with hiragana/katakana/kanji as appropriate. Pronunciation guides that say things like "(yah boh-mah)" can stay in romaji.
+7. Return ONLY the translated inner HTML — no markdown, no explanation, no wrapping tags.
+
+Translate this lesson HTML into ${targetLang}:
+
+${originalHTML}`;
+
+ const response = await fetch('https://api.anthropic.com/v1/messages', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({
+ model: 'claude-sonnet-4-20250514',
+ max_tokens: 4000,
+ messages: [{ role: 'user', content: prompt }]
+ })
+ });
+
+ const data = await response.json();
+ const translated = data.content?.[0]?.text || originalHTML;
+
+ // Cache it
+ cache[cacheKey] = translated;
+ setLangCache(cache);
+
+ applyTranslation(el, translated);
+
+ } catch(err) {
+ console.error('Translation error:', err);
+ } finally {
+ hideTransOverlay();
+ }
+ }
+
+ function applyTranslation(el, translatedHTML) {
+ // Save nav buttons (always keep in current structure, they use JS)
+ const navButtons = el.querySelector('.nav-buttons');
+ const navHTML = navButtons ? navButtons.outerHTML : '';
+
+ el.innerHTML = translatedHTML;
+
+ // Restore nav buttons if they got mangled (they should survive but just in case)
+ if (navHTML && !el.querySelector('.nav-buttons')) {
+ el.insertAdjacentHTML('beforeend', navHTML);
+ }
+ hideTransOverlay();
+ }
+
+ // Translate quiz data on demand
+ const translatedQuizData = {};
+
+ async function getTranslatedQuiz(quizNum) {
+ if (!quizData[quizNum]) { console.error('No quiz data for quiz', quizNum); return null; }
+ if (LANG === 'en') return quizData[quizNum];
+ const cacheKey = LANG + '_quiz_' + quizNum;
+ const cache = getLangCache();
+ if (cache[cacheKey]) return JSON.parse(cache[cacheKey]);
+
+ showTransOverlay(LANG_LOADING[LANG]);
+
+ try {
+ const langNames = { es: 'Spanish', fr: 'French', ja: 'Japanese' };
+ const targetLang = langNames[LANG];
+ const quiz = quizData[quizNum];
+
+ const prompt = `Translate this Molah quiz into ${targetLang}. Return ONLY valid JSON, no markdown.
+
+RULES:
+- Translate the "q" (question text) and "choices" arrays and "explain" fields into ${targetLang}.
+- NEVER translate Molah words in the questions or choices (words like Lowi, Bolah, Ya, Yo, Ham, Mo, Wu, Wutu, Sysi-mahl, Mr-K, etc.)
+- Keep "type", "answer" (the number index), "speak", and "next" exactly as-is.
+- The "title" field: translate "Quiz N:" keeping the number, translate the topic name.
+- Return the complete quiz object as JSON.
+
+Quiz to translate:
+${JSON.stringify(quiz, null, 2)}`;
+
+ const response = await fetch('https://api.anthropic.com/v1/messages', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({
+ model: 'claude-sonnet-4-20250514',
+ max_tokens: 2000,
+ messages: [{ role: 'user', content: prompt }]
+ })
+ });
+
+ const data = await response.json();
+ let text = data.content?.[0]?.text || '';
+ text = text.replace(/```json|```/g, '').trim();
+ const translated = JSON.parse(text);
+
+ cache[cacheKey] = JSON.stringify(translated);
+ setLangCache(cache);
+
+ return translated;
+ } catch(err) {
+ console.error('Quiz translation error:', err);
+ return quizData[quizNum]; // fallback to English
+ } finally {
+ hideTransOverlay();
+ }
+ }
+
+ // UI strings for different languages
+ const UI_STRINGS = {
+ en: {
+ correct: '✓ Correct!',
+ wrong: '✗ Not quite.',
+ correctAnswer: 'The correct answer is:',
+ nextQ: 'Next question →',
+ seeResults: 'See results →',
+ back: '← Back',
+ retryQuiz: '↺ Retry quiz',
+ continueTo: 'Continue to Lesson',
+ saveProgress: '💾 Save progress here',
+ saved: '✓ Progress saved',
+ savesPlace: 'Saves your place so you can resume later',
+ results: '— Results',
+ perfect: '🎉 Perfect score! You really know your Molah!',
+ wellDone: "✓ Well done! You're ready for the next lesson.",
+ tryAgain: "✗ A little more practice and you'll have it. Review the lesson and try again!",
+ verbList: '📖 Verb list',
+ },
+ es: {
+ correct: '✓ ¡Correcto!',
+ wrong: '✗ No del todo.',
+ correctAnswer: 'La respuesta correcta es:',
+ nextQ: 'Siguiente pregunta →',
+ seeResults: 'Ver resultados →',
+ back: '← Atrás',
+ retryQuiz: '↺ Repetir quiz',
+ continueTo: 'Continuar a Lección',
+ saveProgress: '💾 Guardar progreso aquí',
+ saved: '✓ Progreso guardado',
+ savesPlace: 'Guarda tu lugar para continuar después',
+ results: '— Resultados',
+ perfect: '🎉 ¡Puntuación perfecta! ¡Realmente conoces Molah!',
+ wellDone: '✓ ¡Bien hecho! Estás listo para la siguiente lección.',
+ tryAgain: '✗ Un poco más de práctica y lo lograrás. ¡Revisa la lección e inténtalo de nuevo!',
+ verbList: '📖 Lista de verbos',
+ },
+ fr: {
+ correct: '✓ Correct !',
+ wrong: '✗ Pas tout à fait.',
+ correctAnswer: 'La bonne réponse est :',
+ nextQ: 'Question suivante →',
+ seeResults: 'Voir les résultats →',
+ back: '← Retour',
+ retryQuiz: '↺ Recommencer le quiz',
+ continueTo: 'Continuer à la Leçon',
+ saveProgress: '💾 Sauvegarder ici',
+ saved: '✓ Progrès sauvegardé',
+ savesPlace: 'Sauvegarde votre place pour reprendre plus tard',
+ results: '— Résultats',
+ perfect: '🎉 Score parfait ! Vous connaissez vraiment le Molah !',
+ wellDone: '✓ Bravo ! Vous êtes prêt(e) pour la prochaine leçon.',
+ tryAgain: '✗ Encore un peu de pratique. Révisez la leçon et réessayez !',
+ verbList: '📖 Liste des verbes',
+ },
+ ja: {
+ correct: '✓ 正解！',
+ wrong: '✗ 惜しい。',
+ correctAnswer: '正しい答えは：',
+ nextQ: '次の問題 →',
+ seeResults: '結果を見る →',
+ back: '← 戻る',
+ retryQuiz: '↺ もう一度',
+ continueTo: 'レッスンへ進む',
+ saveProgress: '💾 ここで保存',
+ saved: '✓ 保存しました',
+ savesPlace: '後で再開できるように保存します',
+ results: '— 結果',
+ perfect: '🎉 満点！モーラをよく知っていますね！',
+ wellDone: '✓ よくできました！次のレッスンへ進みましょう。',
+ tryAgain: '✗ もう少し練習しましょう。レッスンを見直してもう一度！',
+ verbList: '📖 動詞リスト',
+ }
+ };
+
+ function t(key) { return (UI_STRINGS[LANG] || UI_STRINGS.en)[key] || UI_STRINGS.en[key]; }
+
+ </script>
+
+ <script>
+ let currentLesson = 0;
+ const totalLessons = 17;
+
+ // ── Persistence ──────────────────────────────────────────────
+ const STORAGE_KEY = 'molah_progress';
+
+ function saveProgress(data) {
+ try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+ }
+
+ function loadProgress() {
+ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { return {}; }
+ }
+
+ function saveCheckpoint(quizNum, score, total) {
+ const p = loadProgress();
+ p.lastQuiz = quizNum;
+ p.lastLesson = quizData[quizNum].next;
+ if (!p.scores) p.scores = {};
+ // Only save best score
+ const pct = Math.round((score / total) * 100);
+ if (!p.scores[quizNum] || pct > p.scores[quizNum].pct) {
+ p.scores[quizNum] = { score, total, pct };
+ }
+ saveProgress(p);
+ }
+
+ function clearProgress() {
+ try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+ }
+
+ // ── Resume on load ───────────────────────────────────────────
+ window.addEventListener('DOMContentLoaded', () => {
+ const p = loadProgress();
+ if (p.lastLesson && p.lastLesson > 0) {
+ const banner = document.getElementById('resumeBanner');
+ if (banner) {
+ banner.classList.remove('hidden');
+ document.getElementById('resumeBtn').onclick = () => {
+ banner.classList.add('hidden');
+ nextLesson(p.lastLesson);
+ };
+ }
+ }
+ });
+
+ function nextLesson(lessonNum) {
+ document.querySelectorAll('.lesson, .intro, #scoreSummary').forEach(el => el.classList.add('hidden'));
+ const next = document.getElementById(`lesson${lessonNum}`);
+ if (next) next.classList.remove('hidden');
+ currentLesson = lessonNum;
+ const progress = typeof lessonNum === 'number' ? (lessonNum / totalLessons) * 100 : 5;
+ document.getElementById('progress').style.width = progress + '%';
+ window.scrollTo({ top: 0, behavior: 'smooth' });
+ // Translate if non-English
+ if (LANG !== 'en') translateCurrentLesson(lessonNum);
+ // Sync toolbar
+ if (typeof updateToolbar === 'function') updateToolbar(lessonNum);
+ }
+
+ // ── Skip quiz ────────────────────────────────────────────────────
+ function skipQuiz(quizNum, nextLessonNum) {
+ const total = quizData[quizNum].questions.length;
+ const p = loadProgress();
+ if (!p.scores) p.scores = {};
+ // Only record 0 if they haven't already passed it
+ if (!p.scores[quizNum] || p.scores[quizNum].pct === 0) {
+ p.scores[quizNum] = { score: 0, total: total, pct: 0, skipped: true };
+ }
+ p.lastLesson = nextLessonNum;
+ p.lastQuiz = quizNum;
+ saveProgress(p);
+ nextLesson(nextLessonNum);
+ }
+
+ // ── Summary page ─────────────────────────────────────────────────────
+ function showSummary() {
+ document.querySelectorAll('.lesson, .intro').forEach(el => el.classList.add('hidden'));
+ const el = document.getElementById('scoreSummary');
+ el.classList.remove('hidden');
+
+ const p = loadProgress();
+ const scores = p.scores || {};
+ const quizNames = {
+ 1: 'The Alphabet', 2: 'Greetings & Essentials', 3: 'First Words', 4: 'Word Order',
+ 5: 'Tenses', 6: 'Questions', 7: 'Endings & Intensity',
+ 8: 'Conversations', 9: 'Verb List', 10: 'Colors', 11: 'Numbers', 12: 'Negations', 13: 'Descriptors', 14: 'School & Community', 15: 'Making Molah Words'
+ };
+
+ let totalPct = 0, attempted = 0;
+ Object.values(scores).forEach(s => { totalPct += s.pct; attempted++; });
+ const avgPct = attempted > 0 ? Math.round(totalPct / attempted) : null;
+
+ const cards = Object.keys(quizNames).map(n => {
+ const num = parseInt(n);
+ const s = scores[num];
+ const skipped = s && s.skipped && s.pct === 0;
+ const badgeClass = s ? (s.pct >= 60 ? 'badge-pass' : skipped ? 'badge-none' : 'badge-fail') : 'badge-none';
+ const badgeText = s ? (skipped ? '—<br>skip' : `${s.score}/${s.total}<br>${s.pct}%`) : '—';
+ const subText = s ? (s.pct >= 60 ? '✓ Passed' : skipped ? '⟶ Skipped (0%)' : '✗ Not yet passed') : 'Not attempted';
+ return `
+ <div class="summary-card" onclick="showQuiz(${num})">
+ <div class="summary-badge ${badgeClass}">${badgeText}</div>
+ <div class="summary-info">
+ <div class="summary-title">Quiz ${num}: ${quizNames[num]}</div>
+ <div class="summary-sub">${subText}</div>
+ <div class="summary-retry">Click to retake →</div>
+ </div>
+ </div>`;
+ }).join('');
+
+ el.innerHTML = `
+ <h2 style="font-size:1.75rem;font-weight:500;margin-bottom:1.5rem;color:#3C3489;border-bottom:2px solid #CECBF6;padding-bottom:0.75rem;">
+ Your Molah Score Summary
+ </h2>
+ ${avgPct !== null ? `
+ <div class="summary-total">
+ <div class="summary-total-score">${avgPct}%</div>
+ <div class="summary-total-label">Average across ${attempted} quiz${attempted > 1 ? 'zes' : ''} completed</div>
+ </div>` : `<p style="color:#5F5E5A;margin-bottom:1.5rem;">No quizzes completed yet. Work through the lessons and your scores will appear here.</p>`}
+ <div class="summary-grid">${cards}</div>
+ <div class="nav-buttons" style="justify-content:space-between;margin-top:1.5rem;">
+ <button class="btn btn-secondary" onclick="nextLesson(14)">← Back to lesson 13</button>
+ <button class="btn btn-secondary" onclick="if(confirm('Clear all saved progress?')){clearProgress();location.reload();}">🗑 Clear saved progress</button>
+ <button class="btn btn-primary" onclick="nextLesson(0)">↺ Start over</button>
+ </div>
+
+
+ <div class="signup-box" style="border-top-color: #0F6E56; margin-bottom: 0;">
+ <div class="signup-header">
+ <div class="signup-icon">📖</div>
+ <div>
+ <h3 class="signup-title" style="color:#085041;">Download the Complete Molah Guide — $3.99</h3>
+ <p class="signup-subtitle">The full course in a beautifully designed PDF booklet, plus <strong>10 original practice conversations</strong> and the <strong>Philosophy of Molah</strong> essay. Yours to keep forever.</p>
+ </div>
+ </div>
+ <ul style="font-size:0.9375rem;color:#085041;margin:0 0 1.25rem 1.25rem;line-height:1.9;">
+ <li>All 12 lessons — alphabet, grammar, verbs, colors, numbers</li>
+ <li>Complete 80-word reference with groups and root explanations</li>
+ <li>10 practice conversations for real-world situations</li>
+ <li>Quick-reference card for travel</li>
+ <li><strong>The Philosophy of Molah</strong> — a 5-page essay on the ideas that underpin the language</li>
+ <li>Printable, shareable, works offline</li>
+ </ul>
+ <div style="text-align:center;">
+ <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:inline;">
+ <input type="hidden" name="cmd" value="_xclick">
+ <input type="hidden" name="business" value="LearnMolah@yahoo.com">
+ <input type="hidden" name="item_name" value="Molah Complete Guide PDF — 10 Practice Conversations">
+ <input type="hidden" name="amount" value="3.99">
+ <input type="hidden" name="currency_code" value="USD">
+ <input type="hidden" name="no_shipping" value="1">
+ <!-- REPLACE THE VALUE BELOW WITH YOUR PDF GOOGLE DRIVE OR DROPBOX DIRECT DOWNLOAD LINK -->
+ <input type="hidden" name="return" value="https://drive.google.com/file/d/1MX6883-h6Gb7hoK26Qulwfw9fl4GOtxI/view?usp=sharing">
+ <input type="hidden" name="rm" value="2">
+ <input type="hidden" name="cancel_return" value="YOUR_WEBSITE_URL_HERE">
+ <button type="submit" style="
+ background: #0070BA;
+ color: white;
+ border: none;
+ border-radius: 8px;
+ padding: 1rem 2.5rem;
+ font-size: 1.0625rem;
+ font-weight: 600;
+ cursor: pointer;
+ font-family: inherit;
+ letter-spacing: 0.02em;
+ display:inline-flex;
+ align-items:center;
+ gap:0.6rem;
+ transition: background 0.2s, transform 0.1s;
+ " onmouseover="this.style.background='#005EA6'" onmouseout="this.style.background='#0070BA'">
+ <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.93 4.778-4.005 7.201-9.138 7.201h-2.19a.563.563 0 0 0-.556.479l-1.187 7.527h-.506l-.24 1.516a.56.56 0 0 0 .554.647h3.882c.46 0 .85-.334.922-.788.06-.26.76-4.852.816-5.09a.932.932 0 0 1 .923-.788h.58c3.76 0 6.705-1.528 7.565-5.946.36-1.847.174-3.388-.777-4.471z"/></svg>
+ Buy with PayPal — $3.99
+ </button>
+ </form>
+ <p style="font-size:0.8125rem;color:#5F5E5A;margin-top:0.75rem;">
+ Secure payment via PayPal. After payment, your PDF download link will be sent to your PayPal email address.
+ </p>
+ </div>
+ </div>
+
+
+ <div class="signup-box" style="border-top-color: #534AB7; margin-bottom: 0; margin-top: 1.5rem;">
+ <div class="signup-header">
+ <div class="signup-icon">🤖</div>
+ <div>
+ <h3 class="signup-title" style="color:#3C3489;">Practice with a Molah AI Agent — $6.99</h3>
+ <p class="signup-subtitle">A real AI conversational partner that knows every rule of Molah — available 24/7 to help you practice, correct you gently, and build your confidence.</p>
+ </div>
+ </div>
+ <ul style="font-size:0.9375rem;color:#3C3489;margin:0 0 1.25rem 1.25rem;line-height:1.9;">
+ <li><strong>Free conversation</strong> — talk about anything in Molah, the agent responds naturally with translations</li>
+ <li><strong>Guided practice</strong> — the agent sets a real-world scenario and plays the other person</li>
+ <li><strong>Correction mode</strong> — every response includes a note on any word order, vocabulary, or grammar errors</li>
+ <li>Knows all 80 core words, the number system, colors, and every grammar rule</li>
+ <li>Responds in Molah with English translation beneath — always</li>
+ </ul>
+ <div style="text-align:center;">
+ <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display:inline;">
+ <input type="hidden" name="cmd" value="_xclick">
+ <input type="hidden" name="business" value="LearnMolah@yahoo.com">
+ <input type="hidden" name="item_name" value="Molah AI Practice Agent — Lifetime Access">
+ <input type="hidden" name="amount" value="6.99">
+ <input type="hidden" name="currency_code" value="USD">
+ <input type="hidden" name="no_shipping" value="1">
+ <!-- REPLACE THE VALUE BELOW WITH YOUR HOSTED AGENT URL e.g. https://yoursite.netlify.app/molah-agent.html -->
+ <input type="hidden" name="return" value="http://learnmolah.com/agent">
+ <input type="hidden" name="rm" value="2">
+ <input type="hidden" name="cancel_return" value="YOUR_WEBSITE_URL_HERE">
+ <button type="submit" style="
+ background: #534AB7;
+ color: white;
+ border: none;
+ border-radius: 8px;
+ padding: 1rem 2.5rem;
+ font-size: 1.0625rem;
+ font-weight: 600;
+ cursor: pointer;
+ font-family: inherit;
+ letter-spacing: 0.02em;
+ display:inline-flex;
+ align-items:center;
+ gap:0.6rem;
+ transition: background 0.2s, transform 0.1s;
+ " onmouseover="this.style.background='#3C3489'" onmouseout="this.style.background='#534AB7'">
+ <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.93 4.778-4.005 7.201-9.138 7.201h-2.19a.563.563 0 0 0-.556.479l-1.187 7.527h-.506l-.24 1.516a.56.56 0 0 0 .554.647h3.882c.46 0 .85-.334.922-.788.06-.26.76-4.852.816-5.09a.932.932 0 0 1 .923-.788h.58c3.76 0 6.705-1.528 7.565-5.946.36-1.847.174-3.388-.777-4.471z"/></svg>
+ Unlock AI Practice — $6.99
+ </button>
+ </form>
+ <p style="font-size:0.8125rem;color:#5F5E5A;margin-top:0.75rem;">
+ One-time payment. After payment you will be redirected to your personal Molah AI practice session.
+ </p>
+ </div>
+ </div>
+
+ <div class="signup-box" id="signupBox">
+ <div class="signup-header">
+ <div class="signup-icon">🌍</div>
+ <div>
+ <h3 class="signup-title">Join the Molah community</h3>
+ <p class="signup-subtitle">Get language tips, updates, and connect with other Molah speakers around the world.</p>
+ </div>
+ </div>
+ <div class="signup-fields" id="signupFields">
+ <div class="signup-field-group">
+ <label class="signup-label" for="signup-name">Your name</label>
+ <input class="signup-input" id="signup-name" type="text" placeholder="e.g. Maria Santos" autocomplete="name">
+ </div>
+ <div class="signup-field-group">
+ <label class="signup-label" for="signup-email">Email address</label>
+ <input class="signup-input" id="signup-email" type="email" placeholder="you@example.com" autocomplete="email">
+ </div>
+ <div class="signup-field-group">
+ <label class="signup-label" for="signup-country">Country</label>
+ <input class="signup-input" id="signup-country" type="text" placeholder="e.g. Brazil" autocomplete="country-name">
+ </div>
+ <div class="signup-field-group" style="grid-column:1/-1;">
+ <label class="signup-label">I'm interested in...</label>
+ <div class="signup-checks">
+ <label class="signup-check-label"><input type="checkbox" id="chk-tips" checked> Language tips &amp; updates</label>
+ <label class="signup-check-label"><input type="checkbox" id="chk-chat" checked> Chatting with other speakers</label>
+ <label class="signup-check-label"><input type="checkbox" id="chk-meet"> Meeting up in person</label>
+ <label class="signup-check-label"><input type="checkbox" id="chk-teach"> Teaching Molah to others</label>
+ </div>
+ </div>
+ <div id="signup-error" class="signup-error hidden"></div>
+ <div style="grid-column:1/-1;">
+ <button class="btn-signup" onclick="submitSignup()">Send my interest →</button>
+ <p class="signup-privacy"><b>Your details are sent directly to the Molah team at LearnMolah@yahoo.com. We'll never share them.</b></p>
+ </div>
+ </div>
+ <div class="signup-success hidden" id="signupSuccess">
+ <div style="font-size:2.5rem;margin-bottom:0.75rem;">🎉</div>
+ <h4 style="color:#085041;margin-bottom:0.5rem;font-size:1.2rem;">Ya low-low yo, lah!</h4>
+ <p style="color:#085041;">Your email app will open with a pre-filled message to the Molah team. Just hit send!</p>
+ <p style="color:#085041;margin-top:0.5rem;font-size:0.875rem;">Didn't open? Email <strong>LearnMolah@yahoo.com</strong> directly.</p>
+ </div>
+ </div>
+ `;
+ window.scrollTo({ top: 0, behavior: 'smooth' });
+ }
+
+ // ── Quiz engine ──────────────────────────────────────────────
+ const quizData = {
+ 1: {
+ title: "Quiz 1: The Alphabet",
+ questions: [
+ {
+ type: "mc",
+ q: "Which letter makes the sound \"eee\" in Molah?",
+ choices: ["I", "Y", "U", "A"],
+ answer: 1,
+ explain: "Y makes the \"eee\" sound in Molah. I makes \"ihh\", U makes \"oowh\", and A makes \"auh\". Each vowel has a completely distinct mouth position so they can never be confused when listening."
+ },
+ {
+ type: "tf",
+ q: "True or False: The letter 'C' exists in the Molah alphabet.",
+ answer: false,
+ explain: "False. Molah has only 16 letters: 5 vowels (A, I, O, U, Y) and 11 consonants (B, F, H, K, L, M, R, S, T, W, Z). C was left out because its sound is covered by K and S, keeping the alphabet lean and unambiguous."
+ },
+ {
+ type: "mc",
+ q: "How many vowels does the Molah alphabet have?",
+ choices: ["3", "4", "5", "6"],
+ answer: 2,
+ explain: "Molah has exactly 5 vowels: A (auh), I (ihh), O (ohh), U (oowh), and Y (eee). This mirrors the five vowels common to many world languages, making them intuitive while keeping each sound perfectly distinct."
+ },
+ {
+ type: "tf",
+ q: "True or False: Every letter in Molah has exactly one sound.",
+ answer: true,
+ explain: "True — this is one of Molah's core design principles. Unlike English where C can sound like S or K, and vowels shift constantly, every Molah letter always sounds the same. This makes pronunciation and listening comprehension far easier."
+ },
+ {
+ type: "mc",
+ q: "Which of these is NOT a Molah consonant?",
+ choices: ["B", "F", "C", "Z"],
+ answer: 2,
+ explain: "C is not in the Molah alphabet. B, F, and Z are all valid Molah consonants. C was excluded because it is redundant — the K sound covers \"cat\" and the S sound covers \"city\". Molah keeps only letters with unique, unambiguous sounds."
+ }
+ ],
+ next: 2
+ },
+ 2: {
+ title: "Quiz 2: Greetings & Essentials",
+ questions: [
+ {
+ type: "mc",
+ q: "How do you say \"hello\" in Molah?",
+ choices: ["Low", "Lowi", "Bolah", "Kif"],
+ answer: 1,
+ explain: "Lowi = hello. The natural response is \"Molah!\" — the name of the language used as a joyful acknowledgment back. Low means love/yes/thank you, Bolah means goodbye, Kif is the formal respect marker."
+ },
+ {
+ type: "tf",
+ q: "True or False: Bolah means \"go happily\" — combining Bo (go) with the lah (happy) ending.",
+ answer: true,
+ explain: "True. Bolah is a perfect Molah compound — Bo (go) + lah (happy/warm ending) = go happily. Goodbye in Molah is literally a warm wish for the journey, built from words already learned."
+ },
+ {
+ type: "mc",
+ q: "When should you use Kif at the start of a sentence?",
+ choices: ["Whenever you feel polite", "Only with friends", "When addressing someone of great importance, wealth, or power", "At the start of every greeting"],
+ answer: 2,
+ explain: "Kif is reserved for people of great importance, wealth, or power. Using it too freely weakens its meaning — it should feel rare and deliberate, like bowing deeply rather than nodding."
+ },
+ {
+ type: "mc",
+ q: "What does \"Wu\" mean?",
+ choices: ["There / That", "Where", "Here / This", "We"],
+ answer: 2,
+ explain: "Wu = here / this (close to you). Wutu = there / that (far away). The -tu suffix extends wu outward, just as it pushes verbs into the future and time words into tomorrow."
+ },
+ {
+ type: "tf",
+ q: "True or False: \"Wutu\" uses the same -tu suffix as future tense verbs.",
+ answer: true,
+ explain: "True — and this is intentional. The -tu suffix already means \"forward\" or \"away\" in time (future tense, tomorrow). Wutu borrows the same logic for space: wu (here) + tu (away) = there/that. One suffix, two dimensions."
+ },
+ {
+ type: "mc",
+ q: "How do you say \"I want that\" in Molah?",
+ choices: ["Ya bama wu", "Ya bama wutu", "Yo bama wu", "Ya wu bama"],
+ answer: 1,
+ explain: "Ya (I) bama (want) wutu (that/there) — S-V-O order, and wutu for the distant object. Ya bama wu would mean \"I want this\" (close), not that (far)."
+ }
+ ],
+ next: 3
+ },
+ 3: {
+ title: "Quiz 3: First Words",
+ questions: [
+ {
+ type: "mc",
+ q: "What does \"Ya\" mean in Molah?",
+ choices: ["You", "We", "I / me / my", "He / she"],
+ answer: 2,
+ explain: "Ya means I, me, my, and mine — all first-person singular forms. Yo = you, Mo = we/us, Ham = he/she/they. Molah collapses the subject/object/possessive distinction for each pronoun, so you only need four words to cover all personal reference."
+ },
+ {
+ type: "tf",
+ q: "True or False: \"Ham\" is used only for male third persons (he/him).",
+ answer: false,
+ explain: "False. Ham is completely gender-neutral and covers he, she, him, her, his, hers, they, and them. Molah has no grammatical gender at all — one of many design choices that removes unnecessary complexity."
+ },
+ {
+ type: "mc",
+ q: "Which verb means \"to want\"?",
+ choices: ["Ur", "Bo", "Low", "Bama"],
+ answer: 3,
+ explain: "Bama = to want. Ur = to be, Bo = to go, Low = to love/yes/thank you. Bama is one of the most-used verbs in practical situations — \"Yo bama waka?\" (What do you want?) appears constantly in shopping and travel."
+ },
+ {
+ type: "tf",
+ q: "True or False: \"Low\" can mean both \"to love\" AND \"yes\" AND \"thank you\".",
+ answer: true,
+ explain: "True. Low carries all three meanings because they share a common emotional root — affirmation, warmth, and gratitude are all expressions of love. This elegant compression means one short word handles three of the most common social responses."
+ },
+ {
+ type: "mc",
+ q: "How do you say \"I understand\" in Molah?",
+ choices: ["Ya ur", "Ya kab", "Ya bo", "Ya bama"],
+ answer: 1,
+ explain: "Ya kab = I understand. Kab is the verb for active understanding — processing something in the moment. Ya ur = I am, Ya bo = I go, Ya bama = I want. Kab is essential when communicating across language barriers: \"Ya kab\" or \"Ya kab-ill\" (I don't understand)."
+ }
+ ],
+ next: 4
+ },
+ 4: {
+ title: "Quiz 4: Word Order",
+ questions: [
+ {
+ type: "mc",
+ q: "What is the correct word order in Molah?",
+ choices: ["Object-Verb-Subject", "Verb-Subject-Object", "Subject-Verb-Object", "Subject-Object-Verb"],
+ answer: 2,
+ explain: "Molah uses Subject-Verb-Object (S-V-O), the same as English. The subject acts, the verb describes the action, the object receives it. Example: Ya (I) bama (want) brim (drink). This fixed order means no case endings or suffixes are needed to show who does what."
+ },
+ {
+ type: "tf",
+ q: "True or False: In Molah, adjectives go AFTER the noun they describe.",
+ answer: false,
+ explain: "False. Adjectives go BEFORE the noun, just like English. \"Bik ham\" = big person (adjective first). This consistency means you never have to think about placement — describe first, then name what you're describing."
+ },
+ {
+ type: "mc",
+ q: "Which sentence correctly says \"You love me\"?",
+ choices: ["Ya low yo", "Yo low ya", "Low yo ya", "Ya yo low"],
+ answer: 1,
+ explain: "Yo low ya: Yo (you) is the subject, low (love) is the verb, ya (me) is the object. S-V-O order is strict in Molah. \"Ya low yo\" would mean \"I love you\" — swapping subject and object swaps the meaning completely."
+ },
+ {
+ type: "mc",
+ q: "How do you say \"big thing\" in Molah? (bik = big, tamham = thing)",
+ choices: ["tamham bik", "bik-tamham", "bik tamham", "tamham-bik"],
+ answer: 2,
+ explain: "Bik tamham — adjective before noun, separated by a space. Hyphens in Molah join verb compounds (like Smakkr-Wif), not adjective-noun pairs. Putting tamham first would be wrong because adjectives always precede what they describe."
+ },
+ {
+ type: "tf",
+ q: "True or False: \"Mo bo musyum\" means \"We go museum\".",
+ answer: true,
+ explain: "True. Mo (we) bo (go) musyum (museum) follows perfect S-V-O order. Notice that Molah doesn't require \"to the\" — articles and prepositions are omitted when context makes meaning clear, keeping sentences compact."
+ }
+ ],
+ next: 5
+ },
+ 5: {
+ title: "Quiz 5: Tenses",
+ questions: [
+ {
+ type: "mc",
+ q: "How do you make a verb past tense in Molah?",
+ choices: ["Add -tu", "Add -ko", "Change the verb entirely", "Add -mo"],
+ answer: 1,
+ explain: "Add -ko for past tense. -tu is for future. These two suffixes are the ONLY tense markers in Molah — no irregular forms, no stem changes, no memorizing went/went/gone. Every single verb follows the exact same pattern, always."
+ },
+ {
+ type: "tf",
+ q: "True or False: \"Ya bo-tu\" means \"I went\" (past tense).",
+ answer: false,
+ explain: "False. Ya bo-tu means \"I will go\" — -tu is the future marker. For past tense you use -ko: Ya bo-ko = I went. The rule is simple: -ko goes back (past), -tu goes forward (future), no suffix = present."
+ },
+ {
+ type: "mc",
+ q: "What does \"Ya it-ko\" mean?",
+ choices: ["I will eat", "I eat", "I ate", "I want to eat"],
+ answer: 2,
+ explain: "Ya it-ko = I ate. It = eat, -ko = past. No suffix = present (Ya it = I eat), -tu = future (Ya it-tu = I will eat). The verb root never changes — only the suffix tells you when the action happened."
+ },
+ {
+ type: "mc",
+ q: "How do you say \"yesterday\" in Molah? (zora = today)",
+ choices: ["Zora-tu", "Zora-ko", "Zora-mo", "Ill-zora"],
+ answer: 1,
+ explain: "Zora-ko = yesterday (today-past). The -ko/-tu system applies to time words too, not just verbs. So zora (today), zora-ko (yesterday), zora-tu (tomorrow). Learn the pattern once, use it everywhere."
+ },
+ {
+ type: "tf",
+ q: "True or False: The same -ko / -tu pattern works for BOTH verbs AND time words.",
+ answer: true,
+ explain: "True — this is one of Molah's most elegant features. Bo-ko (went), bo-tu (will go), zora-ko (yesterday), zora-tu (tomorrow). The same two suffixes handle all temporal reference across the entire language. Zero extra rules to learn."
+ }
+ ],
+ next: 6
+ },
+ 6: {
+ title: "Quiz 6: Questions",
+ questions: [
+ {
+ type: "mc",
+ q: "What does \"Wu-wu\" mean?",
+ choices: ["What", "When", "Where", "How much"],
+ answer: 2,
+ explain: "Wu-wu = where. The doubling makes it a fixed question word. Waka = what/how/which, To-to = when, Walh = how much. Wu-wu's repeated syllable is easy to remember — think of it as pointing in two directions at once, asking \"which place?\"."
+ },
+ {
+ type: "tf",
+ q: "True or False: In time questions, the time word goes at the END of the sentence.",
+ answer: false,
+ explain: "False. Time words always go at the FRONT of the sentence in Molah. \"Zym, tram bo waka?\" (What time does the train go?) — the time reference leads so the listener immediately knows the topic of the question before hearing the rest."
+ },
+ {
+ type: "mc",
+ q: "How do you ask \"How much?\" in Molah?",
+ choices: ["Waka?", "Wu-wu?", "To-to?", "Walh?"],
+ answer: 3,
+ explain: "Walh = how much (price/value). It comes from the verb Wahl (to value). Used alone as a single-word question, it's one of the most practical phrases in Molah — essential in any market or shop."
+ },
+ {
+ type: "audio",
+ q: "Listen to the Molah phrase. What does it mean?",
+ speak: "Waka, yo bama",
+ choices: ["Where are you going?", "What do you want?", "When will you go?", "How much do you want?"],
+ answer: 1,
+ explain: "Waka (what) yo (you) bama (want) = What do you want? The question word Waka leads the sentence. Wu-wu would ask where, To-to would ask when. This is one of the most essential phrases for any traveler or shopkeeper."
+ },
+ {
+ type: "mc",
+ q: "Which question word covers \"what\", \"how\", AND \"which\"?",
+ choices: ["Wu-wu", "To-to", "Waka", "Walh"],
+ answer: 2,
+ explain: "Waka covers what, how, and which — all three. This compression is intentional: in practical communication, these three questions are often interchangeable. \"Waka?\" alone can mean \"What is it?\", \"How do I do it?\", or \"Which one?\""
+ }
+ ],
+ next: 7
+ },
+ 7: {
+ title: "Quiz 7: Endings & Intensification",
+ questions: [
+ {
+ type: "mc",
+ q: "Adding \"lah\" to the end of a sentence signals...",
+ choices: ["Anger or frustration", "A question", "Happiness, warmth, or cheekiness", "A command"],
+ answer: 2,
+ explain: "Lah signals happiness, warmth, or cheekiness. It softens and brightens whatever came before. \"Ya bo beach lah!\" sounds excited and joyful. Bah is the opposite — it signals something bad or unpleasant. These two endings give Molah emotional colour without extra vocabulary."
+ },
+ {
+ type: "tf",
+ q: "True or False: \"Low-low\" means \"really love / very much\".",
+ answer: true,
+ explain: "True. Repeating a word intensifies it in Molah. Low = love, low-low = really love. This applies universally: woom = fast, woom-woom = very fast; bah = bad, bah-bah = really bad. One pattern handles all degrees of intensity — no separate words for \"very\", \"really\", or \"extremely\"."
+ },
+ {
+ type: "mc",
+ q: "What does \"mor-mor\" mean? (mor = mother)",
+ choices: ["Step-mother", "Grandmother", "Many mothers", "Best mother"],
+ answer: 1,
+ explain: "Mor-mor = grandmother. In Molah, doubling can also indicate an older or deeper version of a relationship. Mor = mother, mor-mor = the mother of the mother = grandmother. Fah = father, fah-fah = grandfather. The same logic applies consistently."
+ },
+ {
+ type: "audio",
+ q: "Listen. What is being expressed?",
+ speak: "Ya low-low yo lah",
+ choices: ["I hate you very much", "I really love you (warmly)", "You love me a lot", "We love each other"],
+ answer: 1,
+ explain: "Ya (I) low-low (really love) yo (you) lah (warmly/happily). Low-low intensifies the love, and the lah ending adds a warm, glowing tone to the whole sentence. Contrast with Ya zoot yo (I hate you) or Ya low yo (I love you, plainly stated)."
+ },
+ {
+ type: "tf",
+ q: "True or False: \"Bah\" at the end of a sentence signals something good or funny.",
+ answer: false,
+ explain: "False. Bah signals something bad, unpleasant, or not funny. \"Wythar ur bah\" = the weather is bad. Lah is the positive ending (happy, cute, cheeky), bah is the negative one. They are direct opposites and together give speakers a quick way to colour any statement emotionally."
+ }
+ ],
+ next: 8
+ },
+ 8: {
+ title: "Quiz 8: Conversations",
+ questions: [
+ {
+ type: "audio",
+ q: "Listen to this phrase from the shop dialogue. What does it mean?",
+ speak: "Yuhm, ya bama fish, walh",
+ choices: ["Good, I have fish, here", "Good! I want fish. How much?", "Yes, the fish is good", "I will buy the fish"],
+ answer: 1,
+ explain: "Yuhm = good, Ya bama fish = I want fish (S-V-O), Walh = how much? This three-part phrase — approval, statement of want, price inquiry — is the core of any market transaction. Yuhm doubles as \"good\" and an affirmative response."
+ },
+ {
+ type: "mc",
+ q: "In the directions dialogue, \"Yo bo strat\" means...",
+ choices: ["You go left", "You go back", "You go straight", "You go fast"],
+ answer: 2,
+ explain: "Strat = straight ahead. Yo (you) bo (go) strat (straight) = you go straight. Lef = left. Direction words like strat and lef are borrowed as local words since Molah doesn't have its own compass terms — the language expects local vocabulary for specifics."
+ },
+ {
+ type: "tf",
+ q: "True or False: \"Yelb\" is used to get someone's attention or ask for help.",
+ answer: true,
+ explain: "True. Yelb is the attention/help call — like \"excuse me!\" or \"help!\" depending on urgency. It appears at the start of both dialogues: \"Yelb! Wu-wu, musyum ur?\" (Excuse me! Where is the museum?). Short, sharp, and unmistakable."
+ },
+ {
+ type: "audio",
+ q: "Listen. Which response fits best?",
+ speak: "Wu-wu, musyum ur",
+ choices: ["The museum is closed", "Where is the museum?", "I want to go to the museum", "The museum is big"],
+ answer: 1,
+ explain: "Wu-wu (where) musyum (museum) ur (is) = Where is the museum? The question word Wu-wu leads the sentence — always first in Molah. A rising tone or question word signals the question."
+ },
+ {
+ type: "mc",
+ q: "How would you say \"I will come tomorrow\" in Molah? Remember: time words go first!",
+ choices: ["Ya bo-wif-a zora-tu", "Zora-tu, ya bo-wif-a", "Ya zora-tu bo-wif-a", "Zora-ko, ya bo-wif-a-tu"],
+ answer: 1,
+ explain: "Zora-tu, ya bo-wif-a. Time word first (zora-tu = tomorrow), then subject (ya = I), then verb (bo-wif-a = return/come). The future is already clear from zora-tu, so the verb doesn't need -tu too. Zora-ko would mean yesterday, making the sentence contradict itself."
+ }
+ ],
+ next: 9
+ },
+ 9: {
+ title: "Quiz 9: The Verb List",
+ questions: [
+ {
+ type: "mc",
+ q: "What does \"Smakkr-Wif\" mean?",
+ choices: ["Make food / Bake", "Build (make-place)", "Place something", "Fix a building"],
+ answer: 1,
+ explain: "Smakkr-Wif = build, literally \"make-place\". Smakkr = make, Wif = place/put. Molah builds compound meanings by joining roots: Smakkr-It = make-food = bake, Smakkr-Wif = make-place = build. Once you know the roots, the compounds are transparent."
+ },
+ {
+ type: "tf",
+ q: "True or False: \"Ur-Boki\" means \"to live\" (be-grow).",
+ answer: true,
+ explain: "True. Ur (be) + Boki (grow) = Ur-Boki (live). Life is the combination of existing and growing — static presence plus dynamic change. This is one of Molah's most poetic compounds, and the logic makes it instantly memorable."
+ },
+ {
+ type: "mc",
+ q: "Which verb means \"to wash / clean\"?",
+ choices: ["Kool", "Klar", "Rows", "Maki"],
+ answer: 1,
+ explain: "Klar = clean/wash. Kool = smooth, Rows = search/find, Maki = fix/repair. Klar was added because washing and cleaning are essential daily needs — especially for travelers — and no existing verb covered them. Klar-Klar (intensified) = scrub thoroughly."
+ },
+ {
+ type: "audio",
+ q: "Listen to this verb. What does it mean?",
+ speak: "Rows",
+ choices: ["Fix / Repair", "Stop", "Search / Find", "Travel"],
+ answer: 2,
+ explain: "Rows = search/find/look for. It suggests moving through possibilities to locate something. Maki = fix/repair, Zuh/Stob = stop, Tiv = travel. Rows-Maki (search-fix) is a natural compound meaning to troubleshoot — two new roots that immediately generate useful combinations."
+ },
+ {
+ type: "mc",
+ q: "What is the three-tier ethical vocabulary of Molah?",
+ choices: ["Ur / Bo / Bama", "Low / Bah / Faka", "Lah / Bah / Low", "Faka / Klar / Tami"],
+ answer: 1,
+ explain: "Low (good/love), Bah (bad/unpleasant), Faka (forbidden/not allowed). These three cover all moral weight: Low affirms, Bah warns, Faka prohibits. Verb + Faka = doing that verb illegally or wrongly: Bo-Faka (trespass), Tafl-Faka (lie), Dahm-Faka (steal)."
+ },
+ {
+ type: "tf",
+ q: "True or False: You should freely add new verbs to Molah whenever you need one.",
+ answer: false,
+ explain: "False. This is one of Molah's core rules: do NOT add new verbs. The fixed verb list is what makes Molah learnable in weeks — if every speaker adds their own vocabulary, mutual understanding breaks down. Instead, combine existing verbs or use local words for specific objects."
+ }
+ ],
+ next: 10
+ },
+ 10: {
+ title: "Quiz 10: Colors",
+ questions: [
+ {
+ type: "mc",
+ q: "What does \"Sys\" mean, and why is it used as the color root?",
+ choices: ["See — colors are about perception", "Show — colors are displayed", "Sky — all colors from sky", "Sun — colors from light"],
+ answer: 0,
+ explain: "Sys means to see — colors are literally how we perceive things. Every Molah color is a way of seeing: Sysi-mahl = see-red, Sysi-krul = see-blue. The root makes the whole category memorable from one word."
+ },
+ {
+ type: "mc",
+ q: "What color is Sysi-mahl?",
+ choices: ["Blue", "Green (bolee)", "White", "Red"],
+ answer: 3,
+ explain: "Sysi-mahl = red. The five primaries are: Sysi-ala (white), Sysi-ootl (black), Sysi-mahl (red), Sysi-bolee (green), Sysi-krul (blue)."
+ },
+ {
+ type: "tf",
+ q: "True or False: Sysi-bolee-krul describes yellow.",
+ answer: true,
+ explain: "True. Molah uses light mixing: red and green combine to make yellow. The tongue click [!] means and, linking the two color components."
+ },
+ {
+ type: "mc",
+ q: "How do you say blue car in Molah? (korby = car)",
+ choices: ["Korby sysi-krul", "Sysi-krul korby", "Krul korby", "Korby-krul"],
+ answer: 1,
+ explain: "Sysi-krul korby — adjective before noun, always. The full color word precedes the thing it describes."
+ },
+ {
+ type: "mc",
+ q: "What color does Sysi-ala-ootl describe?",
+ choices: ["Yellow", "Pink", "Grey", "Brown"],
+ answer: 2,
+ explain: "Grey = Sysi-ala-ootl — blend ala (white) and ootl (black) into one compound word. Any two color roots can be blended this way — no special sound needed."
+ }
+ ],
+ next: 11
+ },
+ 11: {
+ title: "Quiz 11: Numbers",
+ questions: [
+ {
+ type: "mc",
+ q: "What does Mr alone mean in Molah?",
+ choices: ["10", "0", "1", "100"],
+ answer: 2,
+ explain: "Mr alone = 1. It is the base number root. Powers of ten add vowels (Mr-A=10, Mr-I=100), and digits 2-9 add consonants (Mr-B=2, Mr-F=3, and so on)."
+ },
+ {
+ type: "mc",
+ q: "What number is Mr-K?",
+ choices: ["4", "5", "6", "7"],
+ answer: 1,
+ explain: "Mr-K = 5. Consonants map to digits in Molah alphabet order: B=2, F=3, H=4, K=5, L=6, M=7, R=8, S=9."
+ },
+ {
+ type: "tf",
+ q: "True or False: Mr-A alone equals exactly 10.",
+ answer: true,
+ explain: "True. Mr-A = 10 exactly. Vowels mark powers of ten: A=10, I=100, O=1000, U=10000, Y=100000."
+ },
+ {
+ type: "mc",
+ q: "How do you say 15 in Molah using the click separator?",
+ choices: ["Mr-A-K", "Mr-A [!] Mr-K", "Mr-K [!] Mr-A", "Mr-A [!] K"],
+ answer: 1,
+ explain: "Mr-A [!] Mr-K = 10 [!] 5 = 15. The click [!] separates number segments just as it means and everywhere else in Molah. Mr-A alone = 10, Mr-K alone = 5, and the click tells the listener to add them."
+ },
+ {
+ type: "tf",
+ q: "True or False: The sound [~] means zero AND but/however.",
+ answer: true,
+ explain: "True. [~] serves double duty: as a number it means zero, as a conjunction it means but or however. Context always makes the meaning clear."
+ }
+ ],
+ next: 12
+ },
+ 12: {
+ title: "Quiz 12: Negations",
+ questions: [
+ {
+ type: "mc",
+ q: "How do you make a verb negative in Molah?",
+ choices: ["Add -bah after it", "Add Ill- before it", "Add Bah-t before it", "Double the verb"],
+ answer: 1,
+ explain: "Add Ill- as a prefix before the verb or adjective. Ya kabah = I know. Ya ill-kabah = I don't know. The prefix is always hyphenated and attaches directly to whatever it negates."
+ },
+ {
+ type: "mc",
+ q: "How do you say I don't want to sit down in Molah?",
+ choices: ["Ya bama ill-raz-itah", "Ya ill-bama raz-itah", "Bah-t ya bama raz-itah", "Ya raz-itah ill"],
+ answer: 1,
+ explain: "Ya ill-bama raz-itah. Ill- goes before the verb being negated, which is bama (want). The object raz-itah (sit) follows normally. Ill- always attaches to the verb it negates, not the object."
+ },
+ {
+ type: "tf",
+ q: "True or False: Ill- and Illi (lose) are the same word.",
+ answer: false,
+ explain: "False. Ill- is the negation prefix, always hyphenated and attached to another word. Illi is a standalone verb meaning to lose. The hyphen makes them distinct in writing; in speech Ill- is always followed immediately by another word while Illi stands alone."
+ },
+ {
+ type: "mc",
+ q: "How do you say I did not go (past tense negative)?",
+ choices: ["Ya ill-bo", "Ya bo-ill-ko", "Ya ill-bo-ko", "Ya bo-ko-ill"],
+ answer: 2,
+ explain: "Ya ill-bo-ko. Ill- goes before the verb root, and the tense suffix -ko stays at the end. The structure is always: Subject + Ill-[verb]-[tense]. Never split Ill- from the verb root."
+ },
+ {
+ type: "mc",
+ q: "What does Ill-bah mean?",
+ choices: ["Really bad", "Not bad / so-so", "Forbidden bad", "No bad"],
+ answer: 1,
+ explain: "Ill-bah = not bad = so-so. Ill- (not) + bah (bad) = not bad. Similarly Ill-yuhm = not good. Combined: Ill-bah lah! = Not bad at all! (said warmly)."
+ },
+ {
+ type: "tf",
+ q: "True or False: Ya tamala ill-yuhm means I think it is not good.",
+ answer: true,
+ explain: "True. Tamala = to feel/think, ill-yuhm = not-good. Ya tamala ill-yuhm = I feel not-good = I think it is not good. Ill- negates the adjective that follows it wherever it appears in the sentence."
+ }
+ ],
+ next: 13
+ },
+ 13: {
+ title: "Quiz 13: Descriptors",
+ questions: [
+ {
+ type: "mc",
+ q: "Which word means easy or smooth in Molah?",
+ choices: ["Strak", "Kool", "Loom", "Tib"],
+ answer: 1,
+ explain: "Kool means smooth and easy — a smooth path is an easy one. It was already in the language meaning smooth, now extended to easy as well. Strak = hard/difficult, Loom = long, Tib = short."
+ },
+ {
+ type: "mc",
+ q: "How do you say \"Molah is not difficult\" in Molah?",
+ choices: ["Molah ur strak.", "Molah ur ill-strak.", "Molah ur kool-bah.", "Molah ur ill-kool."],
+ answer: 1,
+ explain: "Molah ur ill-strak — Ill- negates strak (hard/difficult), giving not difficult. Molah ur strak would mean Molah is difficult — the opposite!"
+ },
+ {
+ type: "tf",
+ q: "True or False: Loom means long and Tib means short.",
+ answer: true,
+ explain: "True. Loom (long) has a drawn-out sound that mirrors its meaning. Tib (short) is itself a short, clipped word — it embodies what it describes. Both follow Molah's principle that words should feel like what they mean."
+ },
+ {
+ type: "mc",
+ q: "How do you say \"This is a long conversation\" in Molah? (tafl = conversation)",
+ choices: ["Ya loom tafl.", "Wu ur loom tafl.", "Wu ur tafl loom.", "Loom tafl ur wu."],
+ answer: 1,
+ explain: "Wu ur loom tafl — Wu (this/here) ur (is) loom (long) tafl (conversation). Adjectives go BEFORE the noun in Molah, so loom comes before tafl. Wu ur is the subject+verb, then the adjective+noun object."
+ },
+ {
+ type: "mc",
+ q: "What does Ill-kool mean?",
+ choices: ["Very smooth", "Not easy / difficult", "Short and hard", "Not smooth-looking"],
+ answer: 1,
+ explain: "Ill-kool = not easy / not smooth = difficult. Molah's negation prefix Ill- works on adjectives too, so you can express difficult either as Strak or Ill-kool — two ways to say the same thing, with slightly different nuance."
+ }
+ ],
+ next: 14
+ },
+ 14: {
+ title: "Quiz 14: School & Community",
+ questions: [
+ {
+ type: "mc",
+ q: "What does Kabah-Wif mean?",
+ choices: ["Know-place = School", "Big-place = University", "Child-place = Playground", "Learn-go = Study"],
+ answer: 0,
+ explain: "Kabah-Wif = know-place = school. Kabah means to know, Wif means place. Molah builds compound words by joining roots — the meaning is always visible in the parts."
+ },
+ {
+ type: "mc",
+ q: "How do you say university in Molah?",
+ choices: ["Kabah-Wif-Woom", "Woom-Kabah-Wif", "Kabah-Kabah-Wif", "Loom-Kabah-Wif"],
+ answer: 2,
+ explain: "Kabah-Kabah-Wif — doubling intensifies: really-know-place = university. Same rule as low-low (really love) and woom-woom (very fast). No new rule needed."
+ },
+ {
+ type: "tf",
+ q: "True or False: Tib-Ham means child (short-person).",
+ answer: true,
+ explain: "True. Tib (short) + Ham (person) = short-person = child. This compound also gives Tib-Ham-Kabah-Wif = elementary school (short-person-know-place)."
+ },
+ {
+ type: "mc",
+ q: "How do you say I go to school in Molah?",
+ choices: ["Ya bo Kabah-Wif.", "Ya kabah wif.", "Kabah-Wif bo ya.", "Ya bama wif-kabah."],
+ answer: 0,
+ explain: "Ya bo Kabah-Wif — Ya (I) bo (go) (to/toward) Kabah-Wif (school). is the direction connector. S-V-O order maintained."
+ },
+ {
+ type: "mc",
+ q: "What is elementary school in Molah?",
+ choices: ["Tib-Kabah-Wif", "Kabah-Wif-Tib", "Tib-Ham-Kabah-Wif", "Ham-Tib-Wif"],
+ answer: 2,
+ explain: "Tib-Ham-Kabah-Wif = short-person-know-place = elementary school. Adjectives before nouns: Tib (short) before Ham (person), then Tib-Ham before Kabah-Wif."
+ }
+ ],
+ next: 15
+ },
+ 15: {
+ title: "Quiz 15: Making Molah Words",
+ questions: [
+ {
+ type: "mc",
+ q: "What is the first step in converting a word into Molah?",
+ choices: ["Translate it", "Write it normally, then remove non-Molah letters", "Find the nearest verb", "Double it"],
+ answer: 1,
+ explain: "Write the word in its normal spelling, then remove any letters not in the Molah alphabet (C, D, E, G, J, N, P, Q, V, X, and Y when used as a vowel). Pronounce what remains using Molah letter sounds."
+ },
+ {
+ type: "mc",
+ q: "Which letters are NOT in the Molah alphabet and must be removed?",
+ choices: ["C D E G J N P Q V X", "B F H K L M R S T W Z", "A I O U Y", "All consonants"],
+ answer: 0,
+ explain: "The Molah alphabet has 16 letters: vowels A I O U Y and consonants B F H K L M R S T W Z. Any other letter — C D E G J N P Q V X — is removed when converting a word into Molah."
+ },
+ {
+ type: "mc",
+ q: "How would you write the word Horse in Molah?",
+ choices: ["Hors", "Hore", "Horsi", "Horu"],
+ answer: 0,
+ explain: "Horse → remove E → Hors. All remaining letters (H, O, R, S) are in the Molah alphabet. Pronounced hohrz in Molah — very close to the original English sound."
+ },
+ {
+ type: "tf",
+ q: "True or False: You can use local words in the middle of a Molah sentence.",
+ answer: true,
+ explain: "True. This is encouraged in Molah. If a word does not exist in Molah vocabulary, use the local word — especially if you are a visitor in someone else's country. You can also convert the word using the Molah alphabet if you prefer. Either approach is valid."
+ },
+ {
+ type: "mc",
+ q: "What would the name David become in Molah?",
+ choices: ["Daib", "Abi", "Aib", "Dabi"],
+ answer: 2,
+ explain: "David → remove D (×2), V → A-i → Aib. Wait — D is removed, A stays, V is removed, I stays, D is removed → Ai. The remaining letters are A and I, giving Ai (pronounced ah-ee). Each person can decide how to handle their own name — this is a personal creative act in Molah."
+ }
+ ],
+ next: 16
+ }
+ };
+
+ let activeQuiz = null;
+ let quizAnswers = [];
+ let quizScore = 0;
+
+ function speak(text, el) {
+ if (!('speechSynthesis' in window)) return;
+ window.speechSynthesis.cancel();
+ const utt = new SpeechSynthesisUtterance(text);
+ utt.lang = 'en-US';
+ utt.rate = 0.78;
+ utt.pitch = 1.05;
+ window.speechSynthesis.speak(utt);
+ // Visual pulse on the clicked element
+ if (el) {
+ el.classList.add('speaking');
+ setTimeout(() => el.classList.remove('speaking'), 600);
+ }
+ }
+
+ async function showQuiz(quizNum) {
+ // Hide all
+ document.querySelectorAll('.lesson, .intro').forEach(el => el.classList.add('hidden'));
+ const quizEl = document.getElementById(`quiz${quizNum}`);
+ quizEl.classList.remove('hidden');
+
+ activeQuiz = quizNum;
+ quizScore = 0;
+
+ // Get translated quiz data if needed
+ const qData = await getTranslatedQuiz(quizNum);
+ if (!qData) { console.error('Quiz data missing for quiz', quizNum); return; }
+ quizAnswers = new Array(qData.questions.length).fill(null);
+
+ renderQuiz(quizNum, 0, qData);
+ window.scrollTo({ top: 0, behavior: 'smooth' });
+ }
+
+ function renderQuiz(quizNum, qIndex, qData) {
+ const quiz = qData || quizData[quizNum];
+ const q = quiz.questions[qIndex];
+ const total = quiz.questions.length;
+ const el = document.getElementById(`quiz${quizNum}`);
+ // Store qData on the element for selectAnswer to access
+ el._qData = quiz;
+
+ const tfTrue = LANG === 'ja' ? '✓ 正しい' : LANG === 'es' ? '✓ Verdadero' : LANG === 'fr' ? '✓ Vrai' : '✓ True';
+ const tfFalse = LANG === 'ja' ? '✗ 誤り' : LANG === 'es' ? '✗ Falso' : LANG === 'fr' ? '✗ Faux' : '✗ False';
+ const qLabel = LANG === 'ja' ? `問題 ${qIndex+1} / ${total}` : LANG === 'es' ? `Pregunta ${qIndex+1} de ${total}` : LANG === 'fr' ? `Question ${qIndex+1} sur ${total}` : `Question ${qIndex + 1} of ${total}`;
+
+ el.innerHTML = `
+ <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem;border-bottom:2px solid #CECBF6;padding-bottom:0.75rem;">
+ <h2 style="font-size:1.75rem;font-weight:500;color:#3C3489;margin:0;">${quiz.title}</h2>
+ <button class="btn-verblist" onclick="openVerbList()" title="Open verb list in a new window">${t('verbList')}</button>
+ </div>
+ <div class="quiz-progress">
+ ${qLabel}
+ <div class="quiz-pip-row">
+ ${quiz.questions.map((_, i) => `<div class="quiz-pip ${i < qIndex ? 'done' : i === qIndex ? 'active' : ''}"></div>`).join('')}
+ </div>
+ </div>
+ <div class="quiz-card" id="qcard">
+ ${q.type === 'audio' ? `
+ <div class="quiz-audio-btn" onclick="speak('${q.speak}')" title="Play audio">
+ <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+ <polygon points="5 3 19 12 5 21 5 3"></polygon>
+ </svg>
+ <span>Play phrase</span>
+ </div>
+ ` : ''}
+ <p class="quiz-question">${q.q}</p>
+ <div class="quiz-choices" id="qchoices">
+ ${q.type === 'tf'
+ ? `<button class="quiz-choice" onclick="selectAnswer(${quizNum}, ${qIndex}, true, this)">${tfTrue}</button>
+ <button class="quiz-choice" onclick="selectAnswer(${quizNum}, ${qIndex}, false, this)">${tfFalse}</button>`
+ : q.choices.map((c, i) => `<button class="quiz-choice" onclick="selectAnswer(${quizNum}, ${qIndex}, ${i}, this)">${c}</button>`).join('')
+ }
+ </div>
+ <div class="quiz-feedback hidden" id="qfeedback"></div>
+ <div class="nav-buttons" style="margin-top:1.5rem;">
+ <button class="btn btn-secondary" id="qback" onclick="quizNav('back', ${quizNum}, ${qIndex})">${t('back')}</button>
+ <button class="btn btn-primary hidden" id="qnext" onclick="quizNav('next', ${quizNum}, ${qIndex})">
+ ${qIndex < total - 1 ? t('nextQ') : t('seeResults')}
+ </button>
+ </div>
+ </div>
+ `;
+
+ // Auto-play audio questions
+ if (q.type === 'audio') setTimeout(() => speak(q.speak), 400);
+ }
+
+ function quizNav(direction, quizNum, qIndex) {
+ const qData = document.getElementById('quiz' + quizNum)._qData || quizData[quizNum];
+ const total = qData.questions.length;
+ if (direction === 'next') {
+ if (qIndex < total - 1) {
+ renderQuiz(quizNum, qIndex + 1, qData);
+ } else {
+ showQuizResult(quizNum);
+ }
+ } else {
+ if (qIndex > 0) {
+ renderQuiz(quizNum, qIndex - 1, qData);
+ } else {
+ nextLesson(quizNum);
+ }
+ }
+ }
+
+ function selectAnswer(quizNum, qIndex, selected, btn) {
+ const qData = document.getElementById('quiz' + quizNum)._qData || quizData[quizNum];
+ const q = qData.questions[qIndex];
+ const correct = q.answer;
+ const isCorrect = q.type === 'tf' ? selected === correct : selected === correct;
+
+ // Disable all buttons
+ document.querySelectorAll('#qchoices .quiz-choice').forEach((b, i) => {
+ b.disabled = true;
+ if (q.type === 'tf') {
+ if ((i === 0 && correct === true) || (i === 1 && correct === false)) b.classList.add('correct');
+ else b.classList.add('wrong');
+ } else {
+ if (i === correct) b.classList.add('correct');
+ else b.classList.add('wrong');
+ }
+ });
+ btn.classList.add(isCorrect ? 'selected-correct' : 'selected-wrong');
+
+ quizAnswers[qIndex] = isCorrect;
+ if (isCorrect) quizScore++;
+
+ const correctLabel = q.type === 'tf' ? (correct ? 'True' : 'False') : q.choices[correct];
+ const feedback = document.getElementById('qfeedback');
+ feedback.classList.remove('hidden');
+ feedback.className = `quiz-feedback ${isCorrect ? 'feedback-correct' : 'feedback-wrong'}`;
+ if (isCorrect) {
+ feedback.innerHTML = `<strong>✓ Correct!</strong>${q.explain ? `<div class="feedback-explain">${q.explain}</div>` : ''}`;
+ } else {
+ feedback.innerHTML = `<strong>✗ Not quite.</strong> The correct answer is: <em>${correctLabel}</em>${q.explain ? `<div class="feedback-explain">${q.explain}</div>` : ''}`;
+ }
+
+ document.getElementById('qnext').classList.remove('hidden');
+ }
+
+ function showQuizResult(quizNum) {
+ const quiz = quizData[quizNum];
+ const total = quiz.questions.length;
+ const pct = Math.round((quizScore / total) * 100);
+ const passed = pct >= 60;
+ const el = document.getElementById(`quiz${quizNum}`);
+
+ // Save best score to localStorage
+ saveCheckpoint(quizNum, quizScore, total);
+
+ el.innerHTML = `
+ <h2 style="font-size:1.75rem;font-weight:500;margin-bottom:1.5rem;color:#3C3489;border-bottom:2px solid #CECBF6;padding-bottom:0.75rem;">
+ ${quiz.title} — Results
+ </h2>
+ <div class="quiz-result-ring ${passed ? 'ring-pass' : 'ring-fail'}">
+ <div class="ring-inner">
+ <span class="ring-score">${quizScore}/${total}</span>
+ <span class="ring-label">${pct}%</span>
+ </div>
+ </div>
+ <p class="quiz-result-msg">${passed
+ ? pct === 100
+ ? t('perfect')
+ : t('wellDone')
+ : t('tryAgain')
+ }</p>
+ <div class="nav-buttons" style="margin-top:2rem; justify-content:center; gap: 1rem; flex-wrap:wrap;">
+ <button class="btn btn-secondary" onclick="showQuiz(${quizNum})">${t('retryQuiz')}</button>
+ ${passed ? `<button class="btn btn-primary" onclick="nextLesson(${quiz.next})">${t('continueTo')} ${quiz.next} →</button>` : ''}
+ </div>
+ <div class="save-bar">
+ <button class="btn-save" id="saveBtn${quizNum}" onclick="handleSave(${quizNum}, this)">
+ ${t('saveProgress')}
+ </button>
+ <span class="save-note">${t('savesPlace')}</span>
+ </div>
+ `;
+
+ // Show already-saved state if this checkpoint is current
+ const p = loadProgress();
+ if (p.lastQuiz === quizNum) {
+ const btn = document.getElementById('saveBtn' + quizNum);
+ if (btn) { btn.textContent = t('saved'); btn.classList.add('saved'); btn.disabled = true; }
+ }
+
+ window.scrollTo({ top: 0, behavior: 'smooth' });
+ }
+
+ function handleSave(quizNum, btn) {
+ // Score already saved in showQuizResult; just update UI
+ btn.textContent = t('saved');
+ btn.classList.add('saved');
+ btn.disabled = true;
+ }
+
+ // ── Verb list popup ──────────────────────────────────────────
+ function openVerbList() {
+ const groups = [
+ { title: "Movement — Bo (go)", rows: [["Bo","Go"],["Bo-Wif-A","Return (go-place-back)"],["Bo-Woom","Hurry (go-fast)"],["Tiv","Travel"],["Korby","Drive / Car / Bus"],["Wakka","Walk / Way"],["BazI","Run"],["Lift","Lift / Go Up"],["Woo-hoo","Carry"]] },
+ { title: "Place — Wif (place/put)", rows: [["Wif","Place / Put"],["Iti","Stay"],["Raz","Lay / Lie"],["Takkat","Hang"],["Makarat","Tie / Package / Unify"],["Baraz","Bury / Hide"]] },
+ { title: "Making — Smakkr (make)", rows: [["Smakkr","Make"],["Smakkr-It","Bake (make-food)"],["Smakkr-Wif","Build (make-place)"],["Kok","Cook"],["Kubok","Cut"],["Akkr","Break"]] },
+ { title: "Speech — Tah (speak/say)", rows: [["Tafl","Talk / Speak"],["Tah-lah","Ask (say-happy)"],["Tah-low","Answer (say-love)"],["Tah-bah","Decline (say-bad)"],["Tahaza","Breathe / Air"],["Kaza","Shout"],["Rimr","Call"],["Skrif","Write / Mark"]] },
+ { title: "Exchange — Dahm (give)", rows: [["Dahm","Give"],["Dahma","Buy (give-for)"],["Dahka","Borrow (give-temp)"],["Dahm-Faka","Steal (give-forbidden)"]] },
+ { title: "Mind — Kab (understand)", rows: [["Kab","Understand"],["Kabah","Know"],["Sys","See"],["Sysinda","Realize (see-within)"],["Tamala","Feel"],["Tamoho","Dream"]] },
+ { title: "Emotion — Low (love) & Zoot (hate)", rows: [["Low","Love / Yes / Thank you"],["Low-mah-tah","Care (love-make-speak)"],["Zoot","Hate"],["Kru","Cry"],["Shhh","Sigh"]] },
+ { title: "Being — Ur (be) & Boki (grow)", rows: [["Ur","Be (am / is / are)"],["Boki","Grow"],["Ur-Boki","Live (be-grow)"],["Asuho","Sleep"]] },
+ { title: "Body & Food — It (eat)", rows: [["It","Eat"],["Brim","Drink"],["Ikrit","Excrete"],["Raz-itah","Sit"],["Hakka","Steam / Hot (tea)"],["Klar","Clean / Wash"],["Tami","Hurt / Be sick"]] },
+ { title: "Self & Body — Ya (I/me)", rows: [["Yabur","Hold (I-hold)"],["Ya-daht","Need (I-lack)"],["Yabur","Hold / Have / Embrace (I-you-speak-hold)"]] },
+ { title: "Stopping & Slowing — Uhhh (slow)", rows: [["Uhhh","Slow"],["Stob","Stop"],["Stob-Uhhl","Wait (stop-slow)"],["Uhhh-tombo","Long / Pine for (slow-long)"]] },
+ { title: "Open & Close", rows: [["Abin","Open"],["Klos","Close"]] },
+ { title: "Finding & Fixing", rows: [["Rows","Search / Find / Look for"],["Maki","Fix / Repair"]] },
+ { title: "Forbidden — Faka", rows: [["Faka","Forbidden / Not allowed"]] },
+ { title: "Standalone verbs", rows: [["Goot","Finished / Done / Complete"],["Bama","Want"],["Yilb","Help"],["Yo-mo-yo","Meet (you-we-you)"],["Sily","Play"],["Illi","Lose"],["Mo-fat","Try"],["Wahl","Value"],["Kool","Smooth"],["Billoozuh","Kill"],["Li-Bah","Deceive"],["Bah-bin","Pass"],["Mira","Remember / Recall"],["Lafa","Laugh / Funny"],["Kabah-Kah","Ultimate / Divine / Supremely good"],["Faka-Fak","Evil / Utterly terrible / The worst"],["Ham-Zuh","New / slang: Cool!"],["Wuz-Zuh","Old / slang: Bummer!"],["Akkr-Wif","Toilet / Bathroom (break-place)"],["Rimba","Rainstorm / Crazy"],["Klara","Clear sky / Sober"]] }
+ ];
+
+ const rows = groups.map(g => `
+ <tr><td colspan="2" style="background:#3C3489;color:white;font-weight:600;padding:8px 12px;font-size:0.875rem;letter-spacing:0.03em;">${g.title}</td></tr>
+ ${g.rows.map((r,i) => `<tr style="background:${i%2===0?'#fff':'#F1EFE8'}"><td style="padding:7px 12px;font-weight:600;color:#2C2C2A;border-bottom:1px solid #E8E6DF;">${r[0]}</td><td style="padding:7px 12px;color:#444441;border-bottom:1px solid #E8E6DF;">${r[1]}</td></tr>`).join('')}
+ `).join('');
+
+ const win = window.open('', 'molah_verbs', 'width=520,height=700,scrollbars=yes,resizable=yes');
+ win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Molah Verb List</title>
+ <style>
+ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;margin:0;padding:0;background:#FAFAF8;color:#2C2C2A;}
+ h1{background:#534AB7;color:white;margin:0;padding:1.25rem 1.5rem;font-size:1.25rem;font-weight:500;position:sticky;top:0;z-index:10;}
+ .subtitle{background:#534AB7;color:rgba(255,255,255,0.85);padding:0 1.5rem 1rem;font-size:0.875rem;margin-top:-0.5rem;}
+ .search-wrap{padding:0.75rem 1rem;background:#EEEDFE;position:sticky;top:64px;z-index:9;}
+ #verbSearch{width:100%;padding:0.6rem 0.875rem;border:2px solid #CECBF6;border-radius:6px;font-size:0.9375rem;font-family:inherit;color:#2C2C2A;background:white;box-sizing:border-box;}
+ #verbSearch:focus{outline:none;border-color:#534AB7;}
+ table{width:100%;border-collapse:collapse;font-size:0.9375rem;}
+ .no-results{text-align:center;padding:2rem;color:#5F5E5A;font-size:0.9375rem;}
+ </style></head><body>
+ <h1>Molah — 78 Core Verbs</h1>
+ <div class="subtitle">Tap a row to hear it spoken aloud</div>
+ <div class="search-wrap"><input id="verbSearch" type="text" placeholder="Search verbs..." oninput="filterVerbs(this.value)"></div>
+ <table id="verbTable">${rows}</table>
+ <div id="noResults" class="no-results" style="display:none;">No verbs match your search.</div>
+ <scr' + 'ipt>
+ // Click to speak
+ document.querySelectorAll('tr').forEach(tr => {
+ const cells = tr.querySelectorAll('td');
+ if(cells.length === 2) {
+ tr.style.cursor = 'pointer';
+ tr.addEventListener('click', () => {
+ if('speechSynthesis' in window) {
+ window.speechSynthesis.cancel();
+ const utt = new SpeechSynthesisUtterance(cells[0].textContent);
+ utt.rate = 0.78; utt.pitch = 1.05;
+ window.speechSynthesis.speak(utt);
+ }
+ });
+ }
+ });
+ function filterVerbs(q) {
+ const term = q.toLowerCase();
+ let anyVisible = false;
+ const table = document.getElementById('verbTable');
+ let lastHeader = null;
+ let headerVisible = false;
+ table.querySelectorAll('tr').forEach(tr => {
+ const cells = tr.querySelectorAll('td');
+ if(cells.length === 1) {
+ // header row
+ lastHeader = tr;
+ headerVisible = false;
+ } else if(cells.length === 2) {
+ const match = !term || cells[0].textContent.toLowerCase().includes(term) || cells[1].textContent.toLowerCase().includes(term);
+ tr.style.display = match ? '' : 'none';
+ if(match) { anyVisible = true; headerVisible = true; if(lastHeader) lastHeader.style.display = ''; }
+ }
+ });
+ // Hide headers with no visible rows
+ if(term) {
+ table.querySelectorAll('tr').forEach(tr => {
+ if(tr.querySelectorAll('td').length === 1) {
+ let next = tr.nextElementSibling;
+ let hasVisible = false;
+ while(next && next.querySelectorAll('td').length === 2) {
+ if(next.style.display !== 'none') hasVisible = true;
+ next = next.nextElementSibling;
+ }
+ tr.style.display = hasVisible ? '' : 'none';
+ }
+ });
+ }
+ document.getElementById('noResults').style.display = anyVisible || !term ? 'none' : 'block';
+ }
+ <\/scr' + 'ipt>
+ </body></html>`);
+ win.document.close();
+ }
+
+ // ── Community signup ─────────────────────────────────────────
+ function submitSignup() {
+ const name = document.getElementById('signup-name').value.trim();
+ const email = document.getElementById('signup-email').value.trim();
+ const country = document.getElementById('signup-country').value.trim();
+ const errEl = document.getElementById('signup-error');
+
+ // Validate
+ if (!name) { showSignupError('Please enter your name.'); return; }
+ if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { showSignupError('Please enter a valid email address.'); return; }
+ if (!country) { showSignupError('Please enter your country.'); return; }
+ errEl.classList.add('hidden');
+
+ const interests = [];
+ if (document.getElementById('chk-tips').checked) interests.push('Language tips & updates');
+ if (document.getElementById('chk-chat').checked) interests.push('Chatting with other speakers');
+ if (document.getElementById('chk-meet').checked) interests.push('Meeting up in person');
+ if (document.getElementById('chk-teach').checked) interests.push('Teaching Molah to others');
+
+ const subject = encodeURIComponent('Molah Community Interest — ' + name);
+ const body = encodeURIComponent(
+ 'Hello Molah team,\n\n' +
+ 'I just completed the Molah course and would like to join the community!\n\n' +
+ 'Name: ' + name + '\n' +
+ 'Country: ' + country + '\n' +
+ 'Reply-to: ' + email + '\n\n' +
+ 'Interested in:\n' + (interests.length ? interests.map(i => ' • ' + i).join('\n') : ' (nothing selected)') + '\n\n' +
+ 'Ya low-low yo, lah!\n' +
+ name
+ );
+
+ const mailto = 'mailto:LearnMolah@yahoo.com?subject=' + subject + '&body=' + body;
+ window.location.href = mailto;
+
+ // Show success state
+ document.getElementById('signupFields').classList.add('hidden');
+ document.getElementById('signupSuccess').classList.remove('hidden');
+ }
+
+ function showSignupError(msg) {
+ const el = document.getElementById('signup-error');
+ el.textContent = msg;
+ el.classList.remove('hidden');
+ }
+ 
+
+        function jumpToLesson(lessonNum) {
+            // Hide all lessons, quizzes, summary
+            document.querySelectorAll('.lesson, .intro, #scoreSummary').forEach(el => el.classList.add('hidden'));
+            // Show target
+            const target = document.getElementById('lesson' + lessonNum);
+            if (target) {
+                target.classList.remove('hidden');
+                currentLesson = lessonNum;
+                const total = typeof totalLessons !== 'undefined' ? totalLessons : 17;
+                const pct = typeof lessonNum === 'number' ? (lessonNum / total) * 100 : 5;
+                const bar = document.getElementById('progress');
+                if (bar) bar.style.width = pct + '%';
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            updateToolbar(lessonNum);
+            // Translate if non-English
+            if (typeof LANG !== 'undefined' && LANG !== 'en') translateCurrentLesson(lessonNum);
+        }
+
+        function updateToolbar(activeLesson) {
+            document.querySelectorAll('.lesson-toolbar-btn').forEach(btn => {
+                btn.classList.remove('toolbar-active');
+            });
+            const key = activeLesson === 'OV' ? 'overview' : activeLesson;
+            const activeBtn = document.getElementById('tbtn' + key);
+            if (activeBtn) activeBtn.classList.add('toolbar-active');
+        }
+
+</script>
+</body>
+</html>
